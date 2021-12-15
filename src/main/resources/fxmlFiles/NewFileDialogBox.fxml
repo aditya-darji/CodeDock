@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections?>
+
+<AnchorPane prefHeight="275.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="NewFile.NewFileController">
+   <children>
+      <Label layoutX="84.0" layoutY="109.0" text="Enter File Name:" />
+      <Label layoutX="45.0" layoutY="168.0" text="Choose File Extension:" />
+      <TextField fx:id="fileNameTF" layoutX="252.0" layoutY="104.0" prefHeight="31.0" prefWidth="335.0" />
+      <ComboBox fx:id="fileExtensionCB" layoutX="252.0" layoutY="163.0" prefHeight="31.0" prefWidth="335.0">
+         <items>
+            <FXCollections fx:factory="observableArrayList">
+               <String fx:value=".txt" />
+               <String fx:value=".cpp" />
+               <String fx:value=".c" />
+               <String fx:value=".java" />
+            </FXCollections>
+         </items>
+         <value>
+            <String fx:value=".txt" />
+         </value>
+      </ComboBox>
+      <Label layoutX="41.0" layoutY="56.0" text="Chosen Directory Path:" />
+      <Button fx:id="createFileButton" layoutX="106.0" layoutY="218.0" mnemonicParsing="false" onAction="#createFileClicked" text="Create File" />
+      <Button fx:id="closeButton" layoutX="420.0" layoutY="218.0" mnemonicParsing="false" onAction="#closeClicked" text="Close" />
+      <Label fx:id="pathLabel" layoutX="252.0" layoutY="56.0" prefHeight="21.0" prefWidth="335.0" />
+   </children>
+</AnchorPane>
