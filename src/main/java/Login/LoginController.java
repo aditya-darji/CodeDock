@@ -58,16 +58,14 @@ public class LoginController {
             //Credentials are sent to the server in LoginInfo class
             os.writeInt(2);
             os.writeObject(user);
-            os.writeBoolean(true);
             os.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        System.out.println(oi);
-        boolean b = oi.readBoolean();
+        UseridInfo useridInfo = (UseridInfo) oi.readObject();
 
-        if(!b){
+        if(useridInfo.getUsername().equals("")){
             JOptionPane.showMessageDialog(null, "Username or Password entered is Incorrect");
         }
         else{
