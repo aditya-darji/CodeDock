@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.SignupController">
+   <children>
+      <Label layoutX="100.0" layoutY="185.0" text="Username:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="337.0" layoutY="25.0" text="SIGNUP">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="325.0" text="Password:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="255.0" text="Email ID:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="115.0" text="Name:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="100.0" layoutY="395.0" text="Confirm Password:">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="nameTF" layoutX="359.0" layoutY="117.0" prefHeight="31.0" prefWidth="374.0" />
+      <TextField fx:id="usernameTF" layoutX="359.0" layoutY="187.0" prefHeight="31.0" prefWidth="374.0" />
+      <TextField fx:id="emailTF" layoutX="359.0" layoutY="257.0" prefHeight="31.0" prefWidth="374.0" />
+      <PasswordField fx:id="passwordTF" layoutX="359.0" layoutY="327.0" prefHeight="31.0" prefWidth="374.0" />
+      <PasswordField fx:id="confirmPasswordTF" layoutX="359.0" layoutY="397.0" prefHeight="31.0" prefWidth="374.0" />
+      <Button layoutX="212.0" layoutY="491.0" mnemonicParsing="false" onAction="#signupButtonClicked" text="Signup">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+      <Button layoutX="531.0" layoutY="491.0" mnemonicParsing="false" onAction="#loginButtonClicked" text="Go To Login">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

@@ -1,6 +1,7 @@
 package Editor;
 
 import NewFile.NewFileController;
+import UtilClasses.ConnectionUtil;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.*;
+import java.net.Socket;
 import java.net.URL;
 import java.util.*;
 
@@ -39,6 +41,7 @@ public class EditorController implements Initializable {
     public Vector<TextArea> textAreas;
     private HashMap<String,String> taToPathMap=new HashMap<String,String>();
     private int currIdx = 0;
+    private Socket socket;
 
     Image cImage = new Image(getClass().getResourceAsStream("../images/cFileIcon.png"));
     Image cppImage = new Image((getClass().getResourceAsStream("../images/cppFileIcon.png")));
@@ -48,9 +51,22 @@ public class EditorController implements Initializable {
     Image fileImage = new Image((getClass().getResourceAsStream("../images/fileIcon.png")));
 
     public void newMenuClicked(ActionEvent actionEvent) throws IOException {
+        System.out.println("Editor Controller: " + getSocket());
+
+        try{
+            ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
+            oo.writeInt(1);
+            oo.writeUTF("Temp message from client to server on perfect connection.");
+            oo.flush();
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+
         DirectoryChooser dc = new DirectoryChooser();
         Stage stage = (Stage) editorVBox.getScene().getWindow();
         File file = dc.showDialog(stage);
+
+
 
         if(file != null){
             System.out.println(file.getAbsolutePath());
@@ -70,10 +86,11 @@ public class EditorController implements Initializable {
     public void openMenuClicked(ActionEvent actionEvent) throws IOException {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("Cpp Files", "*.cpp"),
+                new FileChooser.ExtensionFilter("TEXT Files", "*.txt"),
+                new FileChooser.ExtensionFilter("CPP Files", "*.cpp"),
                 new FileChooser.ExtensionFilter("C Files", "*.c"),
-                new FileChooser.ExtensionFilter("JAVA Files", "*.java"));
+                new FileChooser.ExtensionFilter("JAVA Files", "*.java"),
+                new FileChooser.ExtensionFilter("PYTHON Files", "*.py"));
 
         File selectedFile = fc.showOpenDialog(null);
 
@@ -289,16 +306,29 @@ public class EditorController implements Initializable {
         }
         else if(fileExtension.equals("java")){
             try {
-                Process p = Runtime.getRuntime().exec("cmd /C javac " + filename, null, dir);
-//          Process p = Runtime.getRuntime().exec("cmd /C dir", null, dir);
-                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    System.out.println(line);
-                }
-            } catch (IOException e) {
+                runProcess("javac " + dir + "\\" + filename);
+                runProcess("java " + dir + "\\" + exeName);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
+//            try {
+//                Process p = Runtime.getRuntime().exec("cmd /C javac " + filename, null, dir);
+////          Process p = Runtime.getRuntime().exec("cmd /C dir", null, dir);
+//                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
+//                String line = null;
+//                while ((line = in.readLine()) != null) {
+//                    System.out.println(line);
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+        else {
+            ProcessBuilder builder = new ProcessBuilder("python" + dirPath + "\\" +  exeName + ".exe");
+            builder = builder.inheritIO();
+            Process process = builder.start();
+            process.waitFor();
+            System.out.println("Exit value: " + process.exitValue());
         }
 
 
@@ -310,7 +340,7 @@ public class EditorController implements Initializable {
             System.out.println("Exit value: " + process.exitValue());
         }
         else{
-            ProcessBuilder builder = new ProcessBuilder(dirPath + "\\" +  exeName + ".class");
+            ProcessBuilder builder = new ProcessBuilder("java" + dirPath + "\\" +  exeName);
             System.out.println(dirPath + "\\" +  exeName + ".class");
             builder = builder.inheritIO();
             Process process = builder.start();
@@ -319,6 +349,22 @@ public class EditorController implements Initializable {
         }
     }
 
+    private static void printLines(String name, InputStream ins) throws Exception {
+        String line = null;
+        BufferedReader in = new BufferedReader(
+                new InputStreamReader(ins));
+        while ((line = in.readLine()) != null) {
+            System.out.println(name + " " + line);
+        }
+    }
+
+    private static void runProcess(String command) throws Exception {
+        Process pro = Runtime.getRuntime().exec(command);
+        printLines(command + " stdout:", pro.getInputStream());
+        printLines(command + " stderr:", pro.getErrorStream());
+        pro.waitFor();
+        System.out.println(command + " exitValue() " + pro.exitValue());
+    }
 
     public void importButtonClicked(ActionEvent actionEvent) throws IOException {
         FileChooser fc = new FileChooser();
@@ -384,5 +430,13 @@ public class EditorController implements Initializable {
             default:
                 return filename.substring(0, filename.length() - 3);
         }
+    }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
     }
 }
