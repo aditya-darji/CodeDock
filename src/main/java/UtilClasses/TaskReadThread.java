@@ -1,6 +1,6 @@
 package UtilClasses;
 
-import Controllers.EditorController;
+import Controllers.LocalEditorController;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -8,12 +8,12 @@ import java.net.Socket;
 
 public class TaskReadThread implements Runnable{
     Socket socket;
-    EditorController editorController;
+    LocalEditorController localEditorController;
     ObjectInputStream oi;
 
-    public TaskReadThread(Socket socket, EditorController ec){
+    public TaskReadThread(Socket socket, LocalEditorController ec){
         this.socket = socket;
-        this.editorController = ec;
+        this.localEditorController = ec;
     }
 
 
@@ -29,7 +29,7 @@ public class TaskReadThread implements Runnable{
                 String message = oi.readUTF();
                 if(!message.equals("SERVER-REPLY")){
                     //append message of the Text Area of UI (GUI Thread)
-                    editorController.chatTextArea.appendText(message + "\n");
+                    localEditorController.chatTextArea.appendText(message + "\n");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -8,7 +8,7 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox fx:id="editorVBox" prefHeight="780.0" prefWidth="1530.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.EditorController">
+<VBox fx:id="editorVBox" prefHeight="780.0" prefWidth="1530.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.LocalEditorController">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -24,7 +24,8 @@
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" onAction="#preferencesMenuClicked" text="Preferences…" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <MenuItem mnemonicParsing="false" onAction="#quitMenuClicked" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#goToDashboardMenuClicked" text="Go To Dashboard" />
+                  <MenuItem mnemonicParsing="false" onAction="#quitMenuClicked" text="Quit" />
           </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Edit">

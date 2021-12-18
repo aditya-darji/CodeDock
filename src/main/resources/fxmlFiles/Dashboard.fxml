@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="780.0" prefWidth="1530.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.DashboardController">
+   <children>
+      <Label layoutX="73.0" layoutY="60.0" text="CodeDock">
+         <font>
+            <Font name="System Bold" size="64.0" />
+         </font>
+      </Label>
+      <Label layoutX="188.0" layoutY="136.0" text="~ Dock Your Code In">
+         <font>
+            <Font name="System Bold Italic" size="24.0" />
+         </font>
+      </Label>
+      <HBox layoutX="56.0" layoutY="214.0" prefHeight="710.0" prefWidth="1740.0">
+         <children>
+            <ScrollPane prefViewportHeight="710.0" prefViewportWidth="870.0">
+               <content>
+                  <VBox fx:id="allDocumentsVBox" prefHeight="710.0" prefWidth="870.0" spacing="10.0">
+                     <padding>
+                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                     </padding>
+                  </VBox>
+               </content>
+               <HBox.margin>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </HBox.margin>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </ScrollPane>
+            <VBox fx:id="settingsVBox" prefHeight="710.0" prefWidth="412.0" spacing="10.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <children>
+                  <Button mnemonicParsing="false" onAction="#openLocalEditorButtonClicked" prefHeight="96.0" prefWidth="383.0" text="Open Local Editor">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#createNewDocumentClicked" prefHeight="96.0" prefWidth="383.0" text="Create New Document">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <Label fx:id="welcomeLabel" layoutX="1397.0" layoutY="43.0" text="Welcome">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="73.0" layoutY="204.0" text="All Documents:" />
+      <Label layoutX="974.0" layoutY="204.0" text="Settings:" />
+   </children>
+</AnchorPane>

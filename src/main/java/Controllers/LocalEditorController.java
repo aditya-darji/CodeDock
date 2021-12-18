@@ -2,6 +2,7 @@ package Controllers;
 
 import UtilClasses.CreateTree;
 import UtilClasses.TaskReadThread;
+import UtilClasses.UseridInfo;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -13,10 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 
 import javax.swing.*;
 import java.io.*;
@@ -25,7 +23,7 @@ import java.net.URL;
 import java.util.*;
 
 
-public class EditorController implements Initializable {
+public class LocalEditorController implements Initializable {
     @FXML
     public TextArea textArea1, textArea2;
 
@@ -44,6 +42,7 @@ public class EditorController implements Initializable {
     private HashMap<String,String> taToPathMap=new HashMap<String,String>();
     private int currIdx = 0;
     private Socket socket;
+    public UseridInfo useridInfo;
 
     Image cImage = new Image(getClass().getResourceAsStream("../images/cFileIcon.png"));
     Image cppImage = new Image((getClass().getResourceAsStream("../images/cppFileIcon.png")));
@@ -83,10 +82,11 @@ public class EditorController implements Initializable {
             nfc.setDirectoryPath(file.getAbsolutePath());
 
             Stage dashboardStage = new Stage();
+            dashboardStage.initModality(Modality.APPLICATION_MODAL);
             dashboardStage.initStyle(StageStyle.DECORATED);
             dashboardStage.setTitle("Create New File");
             dashboardStage.setScene(new Scene(root, 602, 275));
-            dashboardStage.show();
+            dashboardStage.showAndWait();
         }
     }
 
@@ -430,5 +430,28 @@ public class EditorController implements Initializable {
             sendToTF.clear();
             messageTF.clear();
         }
+    }
+
+    public void goToDashboardMenuClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));
+        Parent root = loader.load();
+        DashboardController dc = loader.getController();
+        dc.setSocket(this.socket);
+        dc.setUseridInfo(useridInfo);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setTitle("Dashboard");
+        dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+        dashboardStage.setScene(new Scene(root, 1530, 780));
+        dashboardStage.show();
+
+        Stage stage = (Stage) editorVBox.getScene().getWindow();
+        stage.close();
+    }
+
+    public void setUseridInfo(UseridInfo useridInfo) {
+        this.useridInfo = useridInfo;
     }
 }

@@ -1,6 +1,6 @@
 package UtilClasses;
 
-import Controllers.EditorController;
+import Controllers.LocalEditorController;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -8,12 +8,12 @@ import javafx.scene.image.ImageView;
 import java.io.File;
 
 public class CreateTree implements Runnable{
-    EditorController editorController;
+    LocalEditorController localEditorController;
     private File file;
     private Image folderImage, fileImage, cImage, cppImage, javaImage, pythonImage;
 
-    public CreateTree(EditorController ec, File file, Image folderImage, Image fileImage, Image cImage, Image cppImage, Image javaImage, Image pythonImage){
-        this.editorController = ec;
+    public CreateTree(LocalEditorController ec, File file, Image folderImage, Image fileImage, Image cImage, Image cppImage, Image javaImage, Image pythonImage){
+        this.localEditorController = ec;
         this.file = file;
         this.folderImage = folderImage;
         this.fileImage = fileImage;
@@ -26,14 +26,14 @@ public class CreateTree implements Runnable{
     @Override
     public void run() {
         TreeItem<String> rootItem = new TreeItem<>(file.getName(), new ImageView(folderImage));
-        editorController.directoryTreeView.setShowRoot(true);
+        localEditorController.directoryTreeView.setShowRoot(true);
 
         File fileList[] = file.listFiles();
 
         for(File f: fileList){
             createTree(f, rootItem);
         }
-        editorController.directoryTreeView.setRoot(rootItem);
+        localEditorController.directoryTreeView.setRoot(rootItem);
     }
 
     private static String getFileExtension(String fileName) {

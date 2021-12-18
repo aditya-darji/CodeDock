@@ -1,7 +1,5 @@
 package Controllers;
 
-import Controllers.SignupController;
-import Controllers.EditorController;
 import UtilClasses.LoginInfo;
 import UtilClasses.UseridInfo;
 import javafx.event.ActionEvent;
@@ -69,18 +67,32 @@ public class LoginController {
         }
         else{
             //On successful login moved to next screen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Editor.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));
             Parent root = loader.load();
-            EditorController ec = loader.getController();
-            ec.setSocket(this.socket);
+            DashboardController dc = loader.getController();
+            dc.setSocket(this.socket);
+            dc.setUseridInfo(useridInfo);
 
             Stage dashboardStage = new Stage();
             dashboardStage.initStyle(StageStyle.DECORATED);
-            dashboardStage.setTitle("CodeDock");
+            dashboardStage.setTitle("Dashboard");
             dashboardStage.setMaximized(true);
 //            dashboardStage.setScene(new Scene(loader.load()));
             dashboardStage.setScene(new Scene(root, 1530, 780));
             dashboardStage.show();
+
+//            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/LocalEditor.fxml"));
+//            Parent root = loader.load();
+//            LocalEditorController ec = loader.getController();
+//            ec.setSocket(this.socket);
+//
+//            Stage dashboardStage = new Stage();
+//            dashboardStage.initStyle(StageStyle.DECORATED);
+//            dashboardStage.setTitle("CodeDock");
+//            dashboardStage.setMaximized(true);
+////            dashboardStage.setScene(new Scene(loader.load()));
+//            dashboardStage.setScene(new Scene(root, 1530, 780));
+//            dashboardStage.show();
 
             Stage stage = (Stage) button.getScene().getWindow();
             stage.close();

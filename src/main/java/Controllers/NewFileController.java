@@ -1,6 +1,5 @@
 package Controllers;
 
-import Controllers.EditorController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -47,9 +46,9 @@ public class NewFileController implements Initializable {
             System.out.println("File already exists.");
         }
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Editor.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/LocalEditor.fxml"));
         Parent root = loader.load();
-        EditorController ec = loader.getController();
+        LocalEditorController ec = loader.getController();
         ec.setNewFilePath(directoryPath + "\\" + fileName + extension);
 
         Stage stage = (Stage) fileNameTF.getScene().getWindow();
