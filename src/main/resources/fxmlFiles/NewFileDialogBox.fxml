@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.collections.FXCollections?>
 
-<AnchorPane prefHeight="275.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="NewFile.NewFileController">
+<AnchorPane prefHeight="275.0" prefWidth="602.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.NewFileController">
    <children>
       <Label layoutX="84.0" layoutY="109.0" text="Enter File Name:" />
       <Label layoutX="45.0" layoutY="168.0" text="Choose File Extension:" />

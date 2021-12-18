@@ -1,10 +1,9 @@
-package Login;
+package Controllers;
 
 import Controllers.SignupController;
-import Editor.EditorController;
+import Controllers.EditorController;
 import UtilClasses.LoginInfo;
 import UtilClasses.UseridInfo;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

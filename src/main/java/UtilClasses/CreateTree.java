@@ -1,6 +1,6 @@
 package UtilClasses;
 
-import Editor.EditorController;
+import Controllers.EditorController;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

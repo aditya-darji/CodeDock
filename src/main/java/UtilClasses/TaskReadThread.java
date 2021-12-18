@@ -1,6 +1,6 @@
 package UtilClasses;
 
-import Editor.EditorController;
+import Controllers.EditorController;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

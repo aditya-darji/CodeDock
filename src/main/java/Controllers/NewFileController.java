@@ -1,6 +1,6 @@
-package NewFile;
+package Controllers;
 
-import Editor.EditorController;
+import Controllers.EditorController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
