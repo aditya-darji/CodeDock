@@ -2,6 +2,7 @@ package Editor;
 
 import NewFile.NewFileController;
 import UtilClasses.ConnectionUtil;
+import UtilClasses.TaskReadThread;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import javax.swing.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
@@ -37,6 +39,9 @@ public class EditorController implements Initializable {
     public Label label1;
     public TextArea inputTextArea;
     public TextArea outputTextArea;
+    public TextArea chatTextArea;
+    public TextField messageTF;
+    public TextField sendToTF;
     private String newFilePath;
     public Vector<TextArea> textAreas;
     private HashMap<String,String> taToPathMap=new HashMap<String,String>();
@@ -49,6 +54,11 @@ public class EditorController implements Initializable {
     Image pythonImage = new Image((getClass().getResourceAsStream("../images/pythonFileIcon.png")));
     Image folderImage = new Image((getClass().getResourceAsStream("../images/folderIcon.png")));
     Image fileImage = new Image((getClass().getResourceAsStream("../images/fileIcon.png")));
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
+    }
 
     public void newMenuClicked(ActionEvent actionEvent) throws IOException {
         System.out.println("Editor Controller: " + getSocket());
@@ -259,11 +269,6 @@ public class EditorController implements Initializable {
         System.out.println("NEW FILE PATH: " + this.newFilePath);
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
-
     public void compileAndRunClicked(ActionEvent actionEvent) throws IOException, InterruptedException {
         System.out.println("ENTERED\n");
         Tab selectedTab = tabPane.getSelectionModel().getSelectedItem();
@@ -437,6 +442,29 @@ public class EditorController implements Initializable {
     }
 
     public void setSocket(Socket socket) {
+
         this.socket = socket;
+
+        TaskReadThread task = new TaskReadThread(socket, this);
+        Thread thread = new Thread(task);
+        thread.start();
+    }
+
+    public void sendMessageClicked(ActionEvent actionEvent) throws IOException {
+        String sendTo = sendToTF.getText().trim();
+        String message = messageTF.getText().trim();
+
+        if(sendTo.isEmpty() || message.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Send to and Message should not be empty.");
+        }
+        else{
+            ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
+            oo.writeInt(4);
+            oo.writeUTF(sendTo);
+            oo.writeUTF(message);
+            oo.flush();
+            sendToTF.clear();
+            messageTF.clear();
+        }
     }
 }

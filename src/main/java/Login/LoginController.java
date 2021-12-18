@@ -78,7 +78,9 @@ public class LoginController {
             Stage dashboardStage = new Stage();
             dashboardStage.initStyle(StageStyle.DECORATED);
             dashboardStage.setTitle("CodeDock");
-            dashboardStage.setScene(new Scene(root, 900, 700));
+            dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+            dashboardStage.setScene(new Scene(root, 1530, 780));
             dashboardStage.show();
 
             Stage stage = (Stage) button.getScene().getWindow();
