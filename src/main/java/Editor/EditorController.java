@@ -2,6 +2,7 @@ package Editor;
 
 import NewFile.NewFileController;
 import UtilClasses.ConnectionUtil;
+import UtilClasses.CreateTree;
 import UtilClasses.TaskReadThread;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -57,7 +58,7 @@ public class EditorController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        chatTextArea.setEditable(false);
     }
 
     public void newMenuClicked(ActionEvent actionEvent) throws IOException {
@@ -176,46 +177,13 @@ public class EditorController implements Initializable {
         if(file != null){
             System.out.println("Path of Directory Chosen is: " + file.getName());
 
-            TreeItem<String> rootItem = new TreeItem<>(file.getName(), new ImageView(folderImage));
-            directoryTreeView.setShowRoot(true);
-
-            File fileList[] = file.listFiles();
-
-            for(File f: fileList){
-                createTree(f, rootItem);
-            }
-            directoryTreeView.setRoot(rootItem);
+            CreateTree createTree = new CreateTree(this, file, folderImage, fileImage, cImage, cppImage, javaImage, pythonImage);
+            Thread thread = new Thread(createTree);
+            thread.start();
         }
     }
 
-    private void createTree(File file, TreeItem<String> parent) {
-        if (file.isDirectory()) {
-            TreeItem<String> treeItem = new TreeItem<>(file.getName(), new ImageView(folderImage));
-            parent.getChildren().add(treeItem);
-            for (File f : (file.listFiles())) {
-                createTree(f, treeItem);
-            }
-        } else{
-            String fileExtension = getFileExtension(file.getAbsolutePath());
-            switch (fileExtension) {
-                case "c":
-                    parent.getChildren().add(new TreeItem<>(file.getName(), new ImageView(cImage)));
-                    break;
-                case "cpp":
-                    parent.getChildren().add(new TreeItem<>(file.getName(), new ImageView(cppImage)));
-                    break;
-                case "java":
-                    parent.getChildren().add(new TreeItem<>(file.getName(), new ImageView(javaImage)));
-                    break;
-                case "py":
-                    parent.getChildren().add(new TreeItem<>(file.getName(), new ImageView(pythonImage)));
-                    break;
-                default:
-                    parent.getChildren().add(new TreeItem<>(file.getName(), new ImageView(fileImage)));
-                    break;
-            }
-        }
-    }
+
 
     private static String getFileExtension(String fileName) {
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
