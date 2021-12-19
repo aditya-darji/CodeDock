@@ -43,6 +43,7 @@ public class LocalEditorController implements Initializable {
     private int currIdx = 0;
     private Socket socket;
     public UseridInfo useridInfo;
+    Thread thread;
 
     Image cImage = new Image(getClass().getResourceAsStream("../images/cFileIcon.png"));
     Image cppImage = new Image((getClass().getResourceAsStream("../images/cppFileIcon.png")));
@@ -410,7 +411,7 @@ public class LocalEditorController implements Initializable {
         this.socket = socket;
 
         TaskReadThread task = new TaskReadThread(socket, this);
-        Thread thread = new Thread(task);
+        thread = new Thread(task);
         thread.start();
     }
 
@@ -423,7 +424,7 @@ public class LocalEditorController implements Initializable {
         }
         else{
             ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
-            oo.writeInt(4);
+            oo.writeInt(6);
             oo.writeUTF(sendTo);
             oo.writeUTF(message);
             oo.flush();
@@ -433,6 +434,8 @@ public class LocalEditorController implements Initializable {
     }
 
     public void goToDashboardMenuClicked(ActionEvent actionEvent) throws IOException {
+        thread.interrupt();
+        stopThread();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));
         Parent root = loader.load();
         DashboardController dc = loader.getController();
@@ -449,6 +452,14 @@ public class LocalEditorController implements Initializable {
 
         Stage stage = (Stage) editorVBox.getScene().getWindow();
         stage.close();
+    }
+
+    private void stopThread() throws IOException {
+        ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
+        oo.writeInt(6);
+        oo.writeUTF("STOP-THREAD");
+        oo.writeUTF("STOP-THREAD");
+        oo.flush();
     }
 
     public void setUseridInfo(UseridInfo useridInfo) {

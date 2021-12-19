@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.NewDocumentCreatorController">
+   <children>
+      <Label layoutX="70.0" layoutY="50.0" text="1. Document Name:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="70.0" layoutY="100.0" text="2. Document Extension:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="70.0" layoutY="150.0" text="3. Load File Content:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="70.0" layoutY="200.0" text="4. Add Collaborators:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <Pane layoutX="120.0" layoutY="240.0" prefHeight="137.0" prefWidth="705.0" style="-fx-border-color: black;">
+         <children>
+            <Label layoutX="37.0" layoutY="19.0" text="Select Username:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <Label layoutX="40.0" layoutY="60.0" text="Access Specifier:">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+            <ComboBox fx:id="selectUsernameCB" layoutX="231.0" layoutY="14.0" prefHeight="31.0" prefWidth="460.0" />
+            <ComboBox fx:id="accessCB" layoutX="231.0" layoutY="58.0" prefHeight="31.0" prefWidth="460.0" />
+            <Button layoutX="282.0" layoutY="101.0" mnemonicParsing="false" onAction="#addCollaboratorButtonClicked" prefHeight="27.0" prefWidth="142.0" text="Add Collaborator">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Button>
+         </children>
+      </Pane>
+      <Label layoutX="67.0" layoutY="385.0" text="5. View Collaborators:">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Label>
+      <ScrollPane layoutX="118.0" layoutY="424.0" prefHeight="194.0" prefViewportHeight="208.0" prefViewportWidth="679.0" prefWidth="681.0">
+         <content>
+            <TextArea fx:id="viewCollaboratorsTA" layoutX="116.0" layoutY="383.0" prefHeight="208.0" prefWidth="679.0" />
+         </content>
+      </ScrollPane>
+      <TextField fx:id="documentNameTF" layoutX="357.0" layoutY="48.0" prefHeight="31.0" prefWidth="460.0" />
+      <Button layoutX="357.0" layoutY="150.0" mnemonicParsing="false" onAction="#openFileButton" prefHeight="31.0" prefWidth="101.0" text="Open" />
+      <Label fx:id="filenameLabel" layoutX="485.0" layoutY="152.0">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
+      <Button layoutX="416.0" layoutY="642.0" mnemonicParsing="false" onAction="#createButtonClicked" text="Create">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+      <ComboBox fx:id="documentExtensionCB" layoutX="357.0" layoutY="98.0" prefHeight="31.0" prefWidth="460.0" />
+   </children>
+</AnchorPane>

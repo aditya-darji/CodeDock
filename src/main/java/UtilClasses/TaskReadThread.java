@@ -20,13 +20,16 @@ public class TaskReadThread implements Runnable{
     @Override
     public void run() {
         //continuously loop it
-        while (true){
+        while (!Thread.currentThread().isInterrupted()){
             try{
                 //Create object input stream
                 oi = new ObjectInputStream(socket.getInputStream());
 
                 //get input from the client
                 String message = oi.readUTF();
+                if(message.equals("STOP-THREAD")){
+                    break;
+                }
                 if(!message.equals("SERVER-REPLY")){
                     //append message of the Text Area of UI (GUI Thread)
                     localEditorController.chatTextArea.appendText(message + "\n");
@@ -35,5 +38,6 @@ public class TaskReadThread implements Runnable{
                 e.printStackTrace();
             }
         }
+        System.out.println("Thread interrupted");
     }
 }
