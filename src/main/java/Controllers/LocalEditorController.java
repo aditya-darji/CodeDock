@@ -433,7 +433,7 @@ public class LocalEditorController implements Initializable {
         }
     }
 
-    public void goToDashboardMenuClicked(ActionEvent actionEvent) throws IOException {
+    public void goToDashboardMenuClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         thread.interrupt();
         stopThread();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));

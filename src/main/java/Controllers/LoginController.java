@@ -63,7 +63,7 @@ public class LoginController {
         UseridInfo useridInfo = (UseridInfo) oi.readObject();
 
         if(useridInfo.getUsername().equals("")){
-            JOptionPane.showMessageDialog(null, "Username or Password entered is Incorrect");
+            JOptionPane.showMessageDialog(null, "Either given user is already logged in or Username/Password entered is Incorrect.");
         }
         else{
             //On successful login moved to next screen
