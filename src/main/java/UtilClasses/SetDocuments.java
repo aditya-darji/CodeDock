@@ -1,14 +1,24 @@
 package UtilClasses;
 
 import Controllers.DashboardController;
+import Controllers.GlobalEditorController;
+import Controllers.LocalEditorController;
+import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
+
+import java.io.IOException;
 import java.util.Collection;
 
 public class SetDocuments implements Runnable{
@@ -49,11 +59,34 @@ public class SetDocuments implements Runnable{
             anchorPane.getChildren().addAll(roomIDLabel, creatorIDLabel, documentNameLabel, documentExtensionLabel, accessLabel, createdAtLabel);
             anchorPane.getChildren().addAll(roomIDTF, creatorIDTF, documentNameTF, documentExtensionTF, accessTF, createdAtTF);
             anchorPane.setId("AnchorPane-" + i);
+            int finalI = i;
             anchorPane.addEventHandler(MouseEvent.MOUSE_PRESSED,
                     new EventHandler<MouseEvent>() {
                         @Override
                         public void handle(MouseEvent event) {
-                            System.out.println(anchorPane.getId() + " is Clicked.");
+                            try{
+                                System.out.println(anchorPane.getId() + " is Clicked.");
+                                FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/GlobalEditor.fxml"));
+                                Parent root = loader.load();
+                                GlobalEditorController gec = loader.getController();
+                                gec.setSocket(dashboardController.getSocket());
+                                gec.setUseridInfo(dashboardController.useridInfo);
+                                gec.setDocumentDetails(dashboardController.getDocumentsList().get(finalI));
+
+                                Stage dashboardStage = new Stage();
+                                dashboardStage.initStyle(StageStyle.DECORATED);
+                                dashboardStage.setTitle("CodeDock Editor");
+                                dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+                                dashboardStage.setScene(new Scene(root, 1530, 780));
+                                dashboardStage.show();
+
+                                Stage stage = (Stage) dashboardController.welcomeLabel.getScene().getWindow();
+                                stage.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     });
 
@@ -173,7 +206,7 @@ public class SetDocuments implements Runnable{
             createdAtTF.setEditable(false);
             createdAtTF.setText(dashboardController.getDocumentsList().get(i).getCreatedAt().toString());
 
-            dashboardController.allDocumentsVBox.getChildren().add(anchorPane);
+            Platform.runLater(() -> dashboardController.allDocumentsVBox.getChildren().add(anchorPane));
 
 //            anchorPane.getChildren().addAll((Collection<? extends Node>) roomIDLabel);
 //            anchorPane.getChildren().addAll((Collection<? extends Node>) creatorIDLabel);

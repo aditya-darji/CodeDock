@@ -37,8 +37,8 @@ public class LoginController {
 
     public void loginButtonClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         //Action event for login purpose of user
-        String username = usernameTF.getText();
-        String password = passwordTF.getText();
+        String username = usernameTF.getText().trim();
+        String password = passwordTF.getText().trim();
 
         if(username.isEmpty() || password.isEmpty()){
             //If any field is empty

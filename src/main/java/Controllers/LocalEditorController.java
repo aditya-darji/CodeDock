@@ -423,6 +423,7 @@ public class LocalEditorController implements Initializable {
             JOptionPane.showMessageDialog(null, "Send to and Message should not be empty.");
         }
         else{
+            chatTextArea.appendText("[" + useridInfo.getUsername() + "]: " + message + "\n");
             ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
             oo.writeInt(6);
             oo.writeUTF(sendTo);

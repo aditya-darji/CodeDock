@@ -24,7 +24,7 @@ public class TaskReadThread implements Runnable{
             try{
                 //Create object input stream
                 oi = new ObjectInputStream(socket.getInputStream());
-
+                
                 //get input from the client
                 String message = oi.readUTF();
                 if(message.equals("STOP-THREAD")){

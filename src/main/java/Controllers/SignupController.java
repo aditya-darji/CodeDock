@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SignupController {
@@ -35,14 +36,32 @@ public class SignupController {
     }
 
     public void signupButtonClicked(ActionEvent actionEvent) throws IOException {
-        String name = nameTF.getText();
-        String username = usernameTF.getText();
-        String email = emailTF.getText();
-        String password = passwordTF.getText();
-        String confirmPassword = confirmPasswordTF.getText();
+        String name = nameTF.getText().trim();
+        String username = usernameTF.getText().trim();
+        String email = emailTF.getText().trim();
+        String password = passwordTF.getText().trim();
+        String confirmPassword = confirmPasswordTF.getText().trim();
 
         if(name.isEmpty() || email.isEmpty() || username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()){
             JOptionPane.showMessageDialog(null, "Fill all fields.");
+        }
+        else if(!isValidUsername(username)){
+            JOptionPane.showMessageDialog(null,
+                    "Please check your username. Check that:\n" +
+                    "=> The username consists of 6 to 30 characters inclusive. If the username\n" +
+                    "=> consists of less than 6 or greater than 30 characters, then it is an invalid username.\n" +
+                    "=> The username can only contain alphanumeric characters and underscores (_). Alphanumeric characters describe the character set consisting of lowercase characters [a – z], uppercase characters [A – Z], and digits [0 – 9].\n" +
+                    "=> The first character of the username must be an alphabetic character, i.e., either lowercase character [a – z] or uppercase character [A – Z].");
+        }
+        else if(!isValidPassword(password)){
+            JOptionPane.showMessageDialog(null,
+                    "Please check your password. Check that:\n" +
+                    "-> It contains at least 8 characters and at most 20 characters.\n" +
+                    "-> It contains at least one digit.\n" +
+                    "-> It contains at least one upper case alphabet.\n" +
+                    "-> It contains at least one lower case alphabet.\n" +
+                    "-> It contains at least one special character which includes !@#$%&*()-+=^.\n" +
+                    "-> It doesn’t contain any white space.");
         }
         else if(!password.equals(confirmPassword)){
             JOptionPane.showMessageDialog(null, "Passwords don't match");
@@ -109,5 +128,61 @@ public class SignupController {
         if (email == null)
             return false;
         return pat.matcher(email).matches();
+    }
+
+    // Function to validate the password.
+    public static boolean
+    isValidPassword(String password)
+    {
+
+        // Regex to check valid password.
+        String regex = "^(?=.*[0-9])"
+                + "(?=.*[a-z])(?=.*[A-Z])"
+                + "(?=.*[@#$%^&+=])"
+                + "(?=\\S+$).{8,20}$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the password is empty
+        // return false
+        if (password == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method
+        // to find matching between given password
+        // and regular expression.
+        Matcher m = p.matcher(password);
+
+        // Return if the password
+        // matched the ReGex
+        return m.matches();
+    }
+
+    // Function to validate the username
+    public static boolean isValidUsername(String name)
+    {
+
+        // Regex to check valid username.
+        String regex = "^[A-Za-z]\\w{5,29}$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+
+        // If the username is empty
+        // return false
+        if (name == null) {
+            return false;
+        }
+
+        // Pattern class contains matcher() method
+        // to find matching between given username
+        // and regular expression.
+        Matcher m = p.matcher(name);
+
+        // Return if the username
+        // matched the ReGex
+        return m.matches();
     }
 }
