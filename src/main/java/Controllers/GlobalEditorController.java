@@ -1,26 +1,33 @@
 package Controllers;
 
-import UtilClasses.DocumentDetails;
-import UtilClasses.GlobalEditorThread;
-import UtilClasses.TaskReadThread;
-import UtilClasses.UseridInfo;
+import UtilClasses.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.text.Element;
+import java.awt.*;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GlobalEditorController implements Initializable {
@@ -33,9 +40,15 @@ public class GlobalEditorController implements Initializable {
     public TextArea personalChatTextArea;
     public TextArea roomChatTextArea;
     public TextField roomMessageTF;
+    public TextArea documentContentTextArea;
+    public MenuItem manageAccessMenuItem;
+    public ScrollPane scrollPane;
     private Socket socket;
     private UseridInfo useridInfo;
     private DocumentDetails documentDetails;
+    public ArrayList<UserAccessInfo> userAccessInfoArrayList;
+    public ArrayList<String> userList;
+    public TextArea lines;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -98,7 +111,7 @@ public class GlobalEditorController implements Initializable {
         return socket;
     }
 
-    public void setSocket(Socket socket) {
+    public void setSocket(Socket socket) throws IOException {
         this.socket = socket;
 
         GlobalEditorThread globalEditorThread = new GlobalEditorThread(socket, this);
@@ -138,5 +151,40 @@ public class GlobalEditorController implements Initializable {
 
     public void setDocumentDetails(DocumentDetails documentDetails) {
         this.documentDetails = documentDetails;
+        documentContentTextArea.setText(this.documentDetails.getDocumentContent());
+
+        if(this.documentDetails.getAccess() == 1){
+            documentContentTextArea.setEditable(false);
+        }
+        if(this.documentDetails.getCreatorId() != useridInfo.getUserid()){
+            manageAccessMenuItem.setDisable(true);
+        }
+
+        try{
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
+            objectOutputStream.writeInt(11);
+            objectOutputStream.writeInt(documentDetails.getRoomId());
+            objectOutputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void manageAccessClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/ManageAccess.fxml"));
+        Parent root = loader.load();
+        ManageAccessController manageAccessController = loader.getController();
+        manageAccessController.setSocket(this.socket);
+        manageAccessController.setUserAccessInfoArrayList(userAccessInfoArrayList);
+        manageAccessController.setRoomId(documentDetails.getRoomId());
+        manageAccessController.setUserList(userList);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initModality(Modality.APPLICATION_MODAL);
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setTitle("Manage Access");
+//            dashboardStage.setScene(new Scene(loader.load()));
+        dashboardStage.setScene(new Scene(root, 900, 700));
+        dashboardStage.showAndWait();
     }
 }

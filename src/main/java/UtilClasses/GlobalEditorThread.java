@@ -41,11 +41,20 @@ public class GlobalEditorThread implements Runnable{
                         String roomMessage = oi.readUTF();
                         globalEditorController.roomChatTextArea.appendText(roomMessage + "\n");
                         break;
+                    case 4:
+                        //get room details
+                        globalEditorController.userAccessInfoArrayList = (ArrayList<UserAccessInfo>) oi.readObject();
+                        globalEditorController.userList = (ArrayList<String>) oi.readObject();
+                        break;
+                    case 5:
+                        //get all users
+                        globalEditorController.userList = (ArrayList<String>) oi.readObject();
+                        break;
                     default:
                         break;
                 }
 
-            } catch (IOException e) { e.printStackTrace();}
+            } catch (IOException | ClassNotFoundException e) { e.printStackTrace();}
         }
         System.out.println("Thread interrupted");
     }

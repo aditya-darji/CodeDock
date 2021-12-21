@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="700.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.ManageAccessController">
+   <children>
+      <Label layoutX="364.0" layoutY="8.0" text="Manage Access">
+         <font>
+            <Font name="System Bold" size="24.0" />
+         </font>
+      </Label>
+      <Button layoutX="391.0" layoutY="655.0" mnemonicParsing="false" onAction="#makeChangesButtonClicked" text="Make Changes" />
+      <ScrollPane layoutX="29.0" layoutY="157.0" prefHeight="457.0" prefViewportHeight="547.0" prefViewportWidth="839.0" prefWidth="841.0">
+         <content>
+            <VBox fx:id="manageAccessVBox" layoutX="29.0" layoutY="65.0" prefHeight="547.0" prefWidth="839.0" spacing="10.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+         </content>
+      </ScrollPane>
+      <Label layoutX="29.0" layoutY="129.0" text="All Collaborators:" />
+      <Label layoutX="29.0" layoutY="52.0" text="Add Collaborator:" />
+      <ComboBox fx:id="addUsernameCB" layoutX="68.0" layoutY="81.0" prefHeight="31.0" prefWidth="257.0" />
+      <ComboBox fx:id="addAccessCB" layoutX="364.0" layoutY="81.0" prefHeight="31.0" prefWidth="257.0" />
+      <Button layoutX="705.0" layoutY="81.0" mnemonicParsing="false" onAction="#addButtonClicked" text="Add" />
+   </children>
+</AnchorPane>

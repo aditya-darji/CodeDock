@@ -31,7 +31,6 @@ public class SetDocuments implements Runnable{
 
     @Override
     public void run() {
-        int x=5,y=5;
         for(int i = 0; i < dashboardController.getDocumentsList().size(); i++){
             Label roomIDLabel = new Label("Room ID:");
             Label creatorIDLabel = new Label("Creator ID:");
@@ -71,11 +70,12 @@ public class SetDocuments implements Runnable{
                                 GlobalEditorController gec = loader.getController();
                                 gec.setSocket(dashboardController.getSocket());
                                 gec.setUseridInfo(dashboardController.useridInfo);
+                                System.out.println();
                                 gec.setDocumentDetails(dashboardController.getDocumentsList().get(finalI));
 
                                 Stage dashboardStage = new Stage();
                                 dashboardStage.initStyle(StageStyle.DECORATED);
-                                dashboardStage.setTitle("CodeDock Editor");
+                                dashboardStage.setTitle("CodeDock Document Name: " + dashboardController.documentsList.get(finalI).getDocumentName() + "." + dashboardController.documentsList.get(finalI).getDocumentExtension());
                                 dashboardStage.setMaximized(true);
 //            dashboardStage.setScene(new Scene(loader.load()));
                                 dashboardStage.setScene(new Scene(root, 1530, 780));
