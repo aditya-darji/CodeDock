@@ -1,6 +1,7 @@
 package Controllers;
 
 import UtilClasses.*;
+import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -11,8 +12,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -20,11 +24,10 @@ import javafx.stage.StageStyle;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.text.Document;
 import javax.swing.text.Element;
 import java.awt.*;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
@@ -42,7 +45,6 @@ public class GlobalEditorController implements Initializable {
     public TextField roomMessageTF;
     public TextArea documentContentTextArea;
     public MenuItem manageAccessMenuItem;
-    public ScrollPane scrollPane;
     private Socket socket;
     private UseridInfo useridInfo;
     private DocumentDetails documentDetails;
@@ -101,7 +103,31 @@ public class GlobalEditorController implements Initializable {
         }
     }
 
-    public void importButtonClicked(ActionEvent actionEvent) {
+    public void importButtonClicked(ActionEvent actionEvent) throws IOException {
+        FileChooser fc = new FileChooser();
+        fc.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+
+        File selectedFile = fc.showOpenDialog(null);
+
+        if(selectedFile != null){
+            String filename = selectedFile.getAbsolutePath();
+            FileReader reader = new FileReader(filename);
+            BufferedReader br = new BufferedReader(reader);
+
+            String line;
+            StringBuilder totalFile = new StringBuilder();
+            long linesLoaded = 0;
+            while ((line = br.readLine()) != null) {
+                totalFile.append(line);
+                totalFile.append("\n");
+            }
+            String result = totalFile.toString();
+            inputTextArea.setText(result);
+        }
+        else{
+            System.out.println("File is Not Valid!");
+        }
     }
 
     public void exportButtonClicked(ActionEvent actionEvent) {
@@ -153,6 +179,45 @@ public class GlobalEditorController implements Initializable {
         this.documentDetails = documentDetails;
         documentContentTextArea.setText(this.documentDetails.getDocumentContent());
 
+        lines.setStyle("-fx-background-color: GRAY;");
+        lines.setEditable(false);
+        lines.setPrefWidth(50);
+        lines.setMaxWidth(50);
+        lines.setMinWidth(50);
+        setLinesTextArea();
+        documentContentTextArea.scrollTopProperty().bindBidirectional(lines.scrollTopProperty());
+        lines.scrollTopProperty().bindBidirectional(documentContentTextArea.scrollTopProperty());
+
+//        documentContentTextArea.textProperty().addListener(new DocumentListener() {
+//            public String getText(DocumentEvent e) {
+//                Document doc = (Document)e.getDocument();
+//                int caretPosition = doc.getLength();
+////        int changeLength = e.getLength();
+//                Element root = doc.getDefaultRootElement();
+//                StringBuilder text = new StringBuilder("1" + System.getProperty("line.separator"));
+//                for(int i = 2; i < root.getElementIndex(caretPosition) + 2; i++) {
+//                    text.append(i).append(System.getProperty("line.separator"));
+//                }
+//                return text.toString();
+//            }
+//
+//            @Override
+//            public void insertUpdate(DocumentEvent e) {
+//                lines.setText(getText(e));
+//            }
+//
+//            @Override
+//            public void removeUpdate(DocumentEvent e) {
+//                lines.setText(getText(e));
+//            }
+//
+//            @Override
+//            public void changedUpdate(DocumentEvent e) {
+//                lines.setText(getText(e));
+//            }
+//        });
+
+
         if(this.documentDetails.getAccess() == 1){
             documentContentTextArea.setEditable(false);
         }
@@ -186,5 +251,22 @@ public class GlobalEditorController implements Initializable {
 //            dashboardStage.setScene(new Scene(loader.load()));
         dashboardStage.setScene(new Scene(root, 900, 700));
         dashboardStage.showAndWait();
+    }
+
+    public void onEnterKeyPress(KeyEvent keyEvent) {
+//        if(keyEvent.getCode().toString().equals("ENTER") || keyEvent.getCode().toString().equals("BACK_SPACE")){
+            System.out.println("KEY PRESSED");
+            setLinesTextArea();
+//        }
+    }
+
+    public void setLinesTextArea(){
+        String toCount = documentContentTextArea.getText();
+        String[] lineArray = toCount.split("\n");
+        StringBuilder text = new StringBuilder("1" + System.getProperty("line.separator"));
+        for(int i = 2; i <= lineArray.length; i++) {
+            text.append(i).append(System.getProperty("line.separator"));
+        }
+        lines.setText(text.toString());
     }
 }
