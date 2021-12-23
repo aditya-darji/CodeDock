@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.geometry.*?>
@@ -77,7 +78,7 @@
                 <AnchorPane prefHeight="950.0" prefWidth="750.0">
                <children>
                   <TextArea fx:id="lines" prefHeight="950.0" prefWidth="38.0" />
-                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onEnterKeyPress" prefHeight="950.0" prefWidth="1100.0" />
+                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onEnterKeyPress" prefHeight="950.0" prefWidth="1000.0" />
                </children></AnchorPane>
                 <AnchorPane prefHeight="724.0" prefWidth="298.0">
                     <children>
@@ -95,6 +96,11 @@
                                 <Font size="12.0" />
                             </font>
                         </Button>
+                  <ScrollPane layoutY="503.0" prefViewportHeight="451.0" prefViewportWidth="355.0">
+                     <content>
+                        <WebView fx:id="webView" layoutY="503.0" prefHeight="451.0" prefWidth="355.0" />
+                     </content>
+                  </ScrollPane>
                     </children>
                 </AnchorPane>
             </items>

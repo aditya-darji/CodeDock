@@ -16,6 +16,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -45,6 +47,7 @@ public class GlobalEditorController implements Initializable {
     public TextField roomMessageTF;
     public TextArea documentContentTextArea;
     public MenuItem manageAccessMenuItem;
+    public WebView webView;
     private Socket socket;
     private UseridInfo useridInfo;
     private DocumentDetails documentDetails;
@@ -179,11 +182,11 @@ public class GlobalEditorController implements Initializable {
         this.documentDetails = documentDetails;
         documentContentTextArea.setText(this.documentDetails.getDocumentContent());
 
-        lines.setStyle("-fx-background-color: GRAY;");
         lines.setEditable(false);
-        lines.setPrefWidth(50);
-        lines.setMaxWidth(50);
-        lines.setMinWidth(50);
+        lines.setPrefWidth(70);
+        lines.setMaxWidth(70);
+        lines.setMinWidth(70);
+        lines.setDisable(true);
         setLinesTextArea();
         documentContentTextArea.scrollTopProperty().bindBidirectional(lines.scrollTopProperty());
         lines.scrollTopProperty().bindBidirectional(documentContentTextArea.scrollTopProperty());
@@ -233,6 +236,9 @@ public class GlobalEditorController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        WebEngine webEngine = webView.getEngine();
+        webEngine.load("https://www.google.com/");
     }
 
     public void manageAccessClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
