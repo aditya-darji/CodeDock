@@ -248,75 +248,76 @@ public class LocalEditorController implements Initializable {
 
         String exeName = getFileName(filename, fileExtension);
         File dir = new File(dirPath);
-        if(fileExtension.equals("c")){
-            try {
-                Process p = Runtime.getRuntime().exec("cmd /C gcc " + filename + " -o " + exeName, null, dir);
-//          Process p = Runtime.getRuntime().exec("cmd /C dir", null, dir);
-                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    System.out.println(line);
+        ProcessBuilder builder = null;
+        try{
+            switch (fileExtension) {
+                case "c": {
+                    Process p = Runtime.getRuntime().exec("cmd /C gcc " + filename + " -o " + exeName, null, dir);
+                    builder = new ProcessBuilder(dirPath + "\\" + exeName + ".exe");
+                    break;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else if(fileExtension.equals("cpp")){
-            try {
-                Process p = Runtime.getRuntime().exec("cmd /C g++ " + filename + " -o " + exeName, null, dir);
-//          Process p = Runtime.getRuntime().exec("cmd /C dir", null, dir);
-                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-                String line = null;
-                while ((line = in.readLine()) != null) {
-                    System.out.println(line);
+                case "cpp": {
+                    Process p = Runtime.getRuntime().exec("cmd /C g++ " + filename + " -o " + exeName, null, dir);
+                    builder = new ProcessBuilder(dirPath + "\\" + exeName + ".exe");
+                    break;
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                case "java":
+
+                    break;
+                default:
+                    builder = new ProcessBuilder("python", dir + "\\" + filename);
+                    break;
             }
-        }
-        else if(fileExtension.equals("java")){
-            try {
-                runProcess("javac " + dir + "\\" + filename);
-                runProcess("java " + dir + "\\" + exeName);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            try {
-//                Process p = Runtime.getRuntime().exec("cmd /C javac " + filename, null, dir);
-////          Process p = Runtime.getRuntime().exec("cmd /C dir", null, dir);
-//                BufferedReader in = new BufferedReader(new InputStreamReader(p.getInputStream()));
-//                String line = null;
-//                while ((line = in.readLine()) != null) {
-//                    System.out.println(line);
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        }
-        else {
-            ProcessBuilder builder = new ProcessBuilder("python" + dirPath + "\\" +  exeName + ".exe");
-            builder = builder.inheritIO();
-            Process process = builder.start();
-            process.waitFor();
-            System.out.println("Exit value: " + process.exitValue());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+        String inputPathName = dirPath + "\\" + exeName + "_INPUT.txt";
+        System.out.println(inputPathName);
+        ObservableList<CharSequence> paragraph = inputTextArea.getParagraphs();
+        Iterator<CharSequence> iter = paragraph.iterator();
+        BufferedWriter bf = new BufferedWriter(new FileWriter(new File(inputPathName)));
+        while(iter.hasNext())
+        {
+            CharSequence seq = iter.next();
+            bf.append(seq);
+            bf.newLine();
+        }
+        bf.flush();
+        bf.close();
 
-        if(!fileExtension.equals("java")) {
-            ProcessBuilder builder = new ProcessBuilder(dirPath + "\\" +  exeName + ".exe");
-            builder = builder.inheritIO();
-            Process process = builder.start();
-            process.waitFor();
-            System.out.println("Exit value: " + process.exitValue());
+        String outputPathName = dirPath + "\\" + exeName + "_OUTPUT.txt";
+        System.out.println(outputPathName);
+        ObservableList<CharSequence> paragraph1 = outputTextArea.getParagraphs();
+        Iterator<CharSequence> iter1 = paragraph1.iterator();
+        BufferedWriter bf1 = new BufferedWriter(new FileWriter(new File(outputPathName)));
+        while(iter1.hasNext())
+        {
+            CharSequence seq = iter1.next();
+            bf1.append(seq);
+            bf1.newLine();
         }
-        else{
-            ProcessBuilder builder = new ProcessBuilder("java" + dirPath + "\\" +  exeName);
-            System.out.println(dirPath + "\\" +  exeName + ".class");
-            builder = builder.inheritIO();
-            Process process = builder.start();
-            process.waitFor();
-            System.out.println("Exit value: " + process.exitValue());
+        bf1.flush();
+        bf1.close();
+
+        builder.redirectInput(new File(inputPathName)).redirectOutput(new File(outputPathName));
+        Process process = builder.start();
+
+        int exitCode = process.waitFor();
+        System.out.println("EXIT CODE: " + exitCode);
+
+        FileReader reader = new FileReader(outputPathName);
+        BufferedReader br = new BufferedReader(reader);
+
+        String line;
+        StringBuilder totalFile = new StringBuilder();
+        long linesLoaded = 0;
+        while ((line = br.readLine()) != null) {
+            totalFile.append(line);
+            totalFile.append("\n");
         }
+        String result = totalFile.toString();
+        outputTextArea.setText(result);
     }
 
     private static void printLines(String name, InputStream ins) throws Exception {

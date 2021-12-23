@@ -260,10 +260,18 @@ public class GlobalEditorController implements Initializable {
     }
 
     public void onEnterKeyPress(KeyEvent keyEvent) {
+        System.out.println("-----------");
+        System.out.println(keyEvent.getCode());
+        int caretPosition = documentContentTextArea.getCaretPosition();
+        System.out.println(caretPosition);
+        String str = documentContentTextArea.getText();
+
+        System.out.println(str.charAt(caretPosition));
 //        if(keyEvent.getCode().toString().equals("ENTER") || keyEvent.getCode().toString().equals("BACK_SPACE")){
             System.out.println("KEY PRESSED");
             setLinesTextArea();
 //        }
+        System.out.println("-----------\n");
     }
 
     public void setLinesTextArea(){

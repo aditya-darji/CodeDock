@@ -78,7 +78,7 @@
                 <AnchorPane prefHeight="950.0" prefWidth="750.0">
                <children>
                   <TextArea fx:id="lines" prefHeight="950.0" prefWidth="38.0" />
-                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onEnterKeyPress" prefHeight="950.0" prefWidth="1000.0" />
+                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onEnterKeyPress" prefHeight="950.0" prefWidth="1100.0" />
                </children></AnchorPane>
                 <AnchorPane prefHeight="724.0" prefWidth="298.0">
                     <children>
