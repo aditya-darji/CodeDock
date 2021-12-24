@@ -253,16 +253,34 @@ public class LocalEditorController implements Initializable {
             switch (fileExtension) {
                 case "c": {
                     Process p = Runtime.getRuntime().exec("cmd /C gcc " + filename + " -o " + exeName, null, dir);
+                    if(p.getErrorStream().read() != -1){
+                        printToOutputTextArea(p.getErrorStream());
+                        return;
+                    }
+                    if(p.exitValue() != 0) return;
                     builder = new ProcessBuilder(dirPath + "\\" + exeName + ".exe");
                     break;
                 }
                 case "cpp": {
                     Process p = Runtime.getRuntime().exec("cmd /C g++ " + filename + " -o " + exeName, null, dir);
+                    if(p.getErrorStream().read() != -1){
+                        printToOutputTextArea(p.getErrorStream());
+                        return;
+                    }
+                    if(p.exitValue() != 0) return;
                     builder = new ProcessBuilder(dirPath + "\\" + exeName + ".exe");
                     break;
                 }
                 case "java":
-
+                    String[] command = {"javac", pathName};
+                    ProcessBuilder processBuilder = new ProcessBuilder(command);
+                    Process process = processBuilder.start();
+                    if( process.getErrorStream().read() != -1 ){
+                        printToOutputTextArea(process.getErrorStream());
+                        return;
+                    }
+                    if(process.exitValue() != 0) return;
+                    builder = new ProcessBuilder("java","-cp",dirPath + "\\",exeName);
                     break;
                 default:
                     builder = new ProcessBuilder("python", dir + "\\" + filename);
@@ -303,6 +321,10 @@ public class LocalEditorController implements Initializable {
         builder.redirectInput(new File(inputPathName)).redirectOutput(new File(outputPathName));
         Process process = builder.start();
 
+        if( process.getErrorStream().read() != -1 ){
+            printToOutputTextArea(process.getErrorStream());
+        }
+
         int exitCode = process.waitFor();
         System.out.println("EXIT CODE: " + exitCode);
 
@@ -318,6 +340,16 @@ public class LocalEditorController implements Initializable {
         }
         String result = totalFile.toString();
         outputTextArea.setText(result);
+    }
+
+    private void printToOutputTextArea(InputStream input) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(input));
+        System.out.println("************* "+ "Compilation Errors" +"***********************");
+        String line = null;
+        while((line = in.readLine()) != null ){
+            outputTextArea.appendText(line + "\n");
+        }
+        in.close();
     }
 
     private static void printLines(String name, InputStream ins) throws Exception {
