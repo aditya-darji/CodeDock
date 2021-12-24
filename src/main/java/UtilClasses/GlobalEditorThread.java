@@ -87,6 +87,10 @@ public class GlobalEditorThread implements Runnable{
                         globalEditorController.documentDetails.setDocumentContent(roomContent1);
                         globalEditorController.documentContentTextArea.setText(roomContent1);
                         break;
+                    case 9:
+                        String outputData = oi.readUTF();
+                        globalEditorController.outputTextArea.setText(outputData);
+                        break;
                     default:
                         break;
                 }

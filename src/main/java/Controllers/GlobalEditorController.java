@@ -91,7 +91,15 @@ public class GlobalEditorController implements Initializable {
         stage.close();
     }
 
-    public void compileAndRunClicked(ActionEvent actionEvent) {
+    public void compileAndRunClicked(ActionEvent actionEvent) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeInt(18);
+        objectOutputStream.writeInt(documentDetails.getRoomId());
+        objectOutputStream.writeUTF(documentDetails.getDocumentName());
+        objectOutputStream.writeUTF(documentDetails.getDocumentContent());
+        objectOutputStream.writeUTF(documentDetails.getDocumentExtension());
+        objectOutputStream.writeUTF(inputTextArea.getText());
+        objectOutputStream.flush();
     }
 
     public void sendMessageClicked(ActionEvent actionEvent) throws IOException {
