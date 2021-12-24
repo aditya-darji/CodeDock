@@ -5,6 +5,7 @@ import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -13,6 +14,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -33,6 +35,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 
 public class GlobalEditorController implements Initializable {
@@ -48,12 +51,16 @@ public class GlobalEditorController implements Initializable {
     public TextArea documentContentTextArea;
     public MenuItem manageAccessMenuItem;
     public WebView webView;
+    public AnchorPane rightAnchorPane;
     private Socket socket;
     private UseridInfo useridInfo;
-    private DocumentDetails documentDetails;
+    public DocumentDetails documentDetails;
     public ArrayList<UserAccessInfo> userAccessInfoArrayList;
     public ArrayList<String> userList;
     public TextArea lines;
+    public HashMap<Integer, Integer> usersCaretPosition = new HashMap<Integer, Integer>();
+    public TextArea caretTextArea;
+    private int keyPressCount = 0;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -64,6 +71,7 @@ public class GlobalEditorController implements Initializable {
     public void goToDashboardMenuClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
         ObjectOutputStream oo = new ObjectOutputStream(socket.getOutputStream());
         oo.writeInt(9);
+        oo.writeInt(documentDetails.getRoomId());
         oo.flush();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));
         Parent root = loader.load();
@@ -182,6 +190,14 @@ public class GlobalEditorController implements Initializable {
         this.documentDetails = documentDetails;
         documentContentTextArea.setText(this.documentDetails.getDocumentContent());
 
+        caretTextArea = new TextArea();
+        caretTextArea.setPrefWidth(400);
+        caretTextArea.setPrefHeight(200);
+        caretTextArea.setLayoutX(10);
+        caretTextArea.setLayoutY(1000);
+        caretTextArea.setEditable(false);
+        rightAnchorPane.getChildren().add(caretTextArea);
+
         lines.setEditable(false);
         lines.setPrefWidth(70);
         lines.setMaxWidth(70);
@@ -259,10 +275,35 @@ public class GlobalEditorController implements Initializable {
         dashboardStage.showAndWait();
     }
 
-    public void onEnterKeyPress(KeyEvent keyEvent) {
+    public void onKeyPress(KeyEvent keyEvent) throws IOException {
+        keyPressCount++;
+        int caretPosition = documentContentTextArea.getCaretPosition();
+        usersCaretPosition.put(useridInfo.getUserid(), caretPosition);
+
+        documentDetails.setDocumentContent(documentContentTextArea.getText());
+
+        SetCaretTextArea setCaretTextArea = new SetCaretTextArea(this);
+        Thread thread = new Thread(setCaretTextArea);
+        thread.start();
+
+        if(keyPressCount == 10){
+            ObjectOutputStream objectOutputStream1 = new ObjectOutputStream(socket.getOutputStream());
+            objectOutputStream1.writeInt(16);
+            objectOutputStream1.writeInt(documentDetails.getRoomId());
+            objectOutputStream1.writeUTF(documentContentTextArea.getText());
+            objectOutputStream1.flush();
+            keyPressCount = 0;
+        }
+        else{
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+            objectOutputStream.writeInt(14);
+            objectOutputStream.writeInt(documentDetails.getRoomId());
+            objectOutputStream.writeInt(caretPosition);
+            objectOutputStream.flush();
+        }
+
         System.out.println("-----------");
         System.out.println(keyEvent.getCode());
-        int caretPosition = documentContentTextArea.getCaretPosition();
         System.out.println(caretPosition);
         String str = documentContentTextArea.getText();
 
@@ -282,5 +323,14 @@ public class GlobalEditorController implements Initializable {
             text.append(i).append(System.getProperty("line.separator"));
         }
         lines.setText(text.toString());
+    }
+
+    public void saveClicked(ActionEvent actionEvent) throws IOException {
+        documentDetails.setDocumentContent(documentContentTextArea.getText());
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeInt(17);
+        objectOutputStream.writeInt(documentDetails.getRoomId());
+        objectOutputStream.writeUTF(documentDetails.getDocumentContent());
+        objectOutputStream.flush();
     }
 }

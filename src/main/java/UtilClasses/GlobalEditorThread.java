@@ -8,6 +8,7 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GlobalEditorThread implements Runnable{
     Socket socket;
@@ -49,6 +50,42 @@ public class GlobalEditorThread implements Runnable{
                     case 5:
                         //get all users
                         globalEditorController.userList = (ArrayList<String>) oi.readObject();
+                        break;
+                    case 6:
+                        //get caretPosition of any online user working in same roomId;
+                        int userId = oi.readInt();
+                        int caretPosition = oi.readInt();
+                        globalEditorController.usersCaretPosition.put(userId, caretPosition);
+                        SetCaretTextArea setCaretTextArea = new SetCaretTextArea(globalEditorController);
+                        Thread thread = new Thread(setCaretTextArea);
+                        thread.start();
+//                        globalEditorController.usersCaretPosition.forEach((userId1, caretPosition1) -> {
+//                            System.out.println(userId1 + " -> " + caretPosition1);
+//                        });
+                        break;
+                    case 7:
+                        HashMap<Integer, RoomUser> roomUserHashMap = (HashMap<Integer, RoomUser>) oi.readObject();
+                        String roomContent = oi.readUTF();
+                        globalEditorController.documentDetails.setDocumentContent(roomContent);
+                        globalEditorController.documentContentTextArea.setText(roomContent);
+
+                        roomUserHashMap.forEach((userId2, roomUserDetail) -> {
+                            globalEditorController.usersCaretPosition.put(userId2, roomUserDetail.getCaretPosition());
+                        });
+
+                        SetCaretTextArea setCaretTextArea1 = new SetCaretTextArea(globalEditorController);
+                        Thread thread1 = new Thread(setCaretTextArea1);
+                        thread1.start();
+//                        roomUserHashMap.forEach((userId2, roomUserDetail) -> {
+//                            globalEditorController.usersCaretPosition.put(userId2, roomUserDetail.getCaretPosition());
+//                        });
+                        break;
+                    case 8:
+                        int userUpdated = oi.readInt();
+                        String roomContent1 = oi.readUTF();
+//                        System.out.println(roomContent1);
+                        globalEditorController.documentDetails.setDocumentContent(roomContent1);
+                        globalEditorController.documentContentTextArea.setText(roomContent1);
                         break;
                     default:
                         break;

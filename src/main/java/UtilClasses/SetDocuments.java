@@ -19,6 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 
 public class SetDocuments implements Runnable{
@@ -64,6 +65,11 @@ public class SetDocuments implements Runnable{
                         @Override
                         public void handle(MouseEvent event) {
                             try{
+                                ObjectOutputStream os = new ObjectOutputStream(dashboardController.getSocket().getOutputStream());
+                                os.writeInt(15);
+                                os.writeInt(dashboardController.getDocumentsList().get(finalI).getRoomId());
+                                os.flush();
+
                                 System.out.println(anchorPane.getId() + " is Clicked.");
                                 FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/GlobalEditor.fxml"));
                                 Parent root = loader.load();

@@ -20,7 +20,7 @@
                         <MenuItem mnemonicParsing="false" text="Open Directory" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save" onAction="#saveClicked"/>
                         <MenuItem mnemonicParsing="false" text="Save As…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="manageAccessMenuItem" mnemonicParsing="false" onAction="#manageAccessClicked" text="Manage Access" />
@@ -41,15 +41,16 @@
             <items>
                 <VBox>
                     <children>
-                        <AnchorPane>
+                        <AnchorPane prefHeight="977.0" prefWidth="390.0">
                             <children>
                                 <Label layoutX="14.0" layoutY="309.0" text="Personal Chat:" />
                                 <TextArea fx:id="personalChatTextArea" layoutX="9.0" layoutY="330.0" prefHeight="194.0" prefWidth="381.0">
                                     <font>
                                         <Font name="System Bold" size="14.0" />
-                                    </font></TextArea>
-
-                                <Label layoutX="14.0" layoutY="572.0" text="Message:" />
+                                    </font>
+                        </TextArea>
+      
+                                                        <Label layoutX="14.0" layoutY="572.0" text="Message:" />
                                 <TextField fx:id="messageTF" layoutX="89.0" layoutY="567.0" prefHeight="31.0" prefWidth="296.0" />
                                 <TextField fx:id="sendToTF" layoutX="89.0" layoutY="530.0" prefHeight="31.0" prefWidth="296.0" />
                                 <Label layoutX="16.0" layoutY="535.0" text="Send To:" />
@@ -78,31 +79,35 @@
                 <AnchorPane prefHeight="950.0" prefWidth="750.0">
                <children>
                   <TextArea fx:id="lines" prefHeight="950.0" prefWidth="38.0" />
-                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onEnterKeyPress" prefHeight="950.0" prefWidth="1100.0" />
+                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onKeyPress" prefHeight="950.0" prefWidth="1000.0" />
                </children></AnchorPane>
-                <AnchorPane prefHeight="724.0" prefWidth="298.0">
-                    <children>
-                        <TextArea fx:id="inputTextArea" layoutX="10.0" layoutY="41.0" prefHeight="200.0" prefWidth="355.0" />
-                        <TextArea fx:id="outputTextArea" layoutX="10.0" layoutY="291.0" prefHeight="200.0" prefWidth="355.0" />
-                        <Label layoutX="10.0" layoutY="14.0" text="INPUT:" />
-                        <Label layoutX="14.0" layoutY="262.0" text="OUTPUT:" />
-                        <Button layoutX="295.0" layoutY="12.0" mnemonicParsing="false" onAction="#importButtonClicked" prefHeight="21.0" prefWidth="70.0" text="Import">
-                            <font>
-                                <Font size="12.0" />
-                            </font>
-                        </Button>
-                        <Button layoutX="295.0" layoutY="260.0" mnemonicParsing="false" onAction="#exportButtonClicked" prefHeight="21.0" prefWidth="70.0" text="Export">
-                            <font>
-                                <Font size="12.0" />
-                            </font>
-                        </Button>
-                  <ScrollPane layoutY="503.0" prefViewportHeight="451.0" prefViewportWidth="355.0">
-                     <content>
-                        <WebView fx:id="webView" layoutY="503.0" prefHeight="451.0" prefWidth="355.0" />
-                     </content>
-                  </ScrollPane>
-                    </children>
-                </AnchorPane>
+            <ScrollPane prefViewportHeight="956.0" prefViewportWidth="365.0">
+               <content>
+                      <AnchorPane fx:id="rightAnchorPane" prefHeight="724.0" prefWidth="298.0">
+                          <children>
+                              <TextArea fx:id="inputTextArea" layoutX="10.0" layoutY="41.0" prefHeight="200.0" prefWidth="400.0" />
+                              <TextArea fx:id="outputTextArea" layoutX="10.0" layoutY="291.0" prefHeight="200.0" prefWidth="400.0" />
+                              <Label layoutX="10.0" layoutY="14.0" text="INPUT:" />
+                              <Label layoutX="14.0" layoutY="262.0" text="OUTPUT:" />
+                              <Button layoutX="295.0" layoutY="12.0" mnemonicParsing="false" onAction="#importButtonClicked" prefHeight="21.0" prefWidth="70.0" text="Import">
+                                  <font>
+                                      <Font size="12.0" />
+                                  </font>
+                              </Button>
+                              <Button layoutX="295.0" layoutY="260.0" mnemonicParsing="false" onAction="#exportButtonClicked" prefHeight="21.0" prefWidth="70.0" text="Export">
+                                  <font>
+                                      <Font size="12.0" />
+                                  </font>
+                              </Button>
+                        <ScrollPane layoutY="503.0" prefViewportHeight="451.0" prefViewportWidth="400.0">
+                           <content>
+                              <WebView fx:id="webView" layoutY="503.0" prefHeight="451.0" prefWidth="400.0" />
+                           </content>
+                        </ScrollPane>
+                          </children>
+                      </AnchorPane>
+               </content>
+            </ScrollPane>
             </items>
         </SplitPane>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
