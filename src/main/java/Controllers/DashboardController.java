@@ -31,6 +31,7 @@ public class DashboardController implements Initializable {
     private Socket socket;
     public UseridInfo useridInfo;
     public ArrayList<DocumentDetails> documentsList;
+    public DashboardController dc;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -39,16 +40,15 @@ public class DashboardController implements Initializable {
 
     public void setSocket(Socket socket) throws IOException, ClassNotFoundException {
         this.socket = socket;
+        dc = this;
+
+        DashboardControllerThread dashboardControllerThread = new DashboardControllerThread();
+        Thread thread1 = new Thread(dashboardControllerThread);
+        thread1.start();
+
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectOutputStream.writeInt(7);
         objectOutputStream.flush();
-
-        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-        documentsList = (ArrayList<DocumentDetails>) objectInputStream.readObject();
-
-        SetDocuments setDocuments = new SetDocuments(this);
-        Thread thread = new Thread(setDocuments);
-        thread.start();
     }
 
     public ArrayList<DocumentDetails> getDocumentsList() {
@@ -131,32 +131,39 @@ public class DashboardController implements Initializable {
                     if(choice==1000) break;
 
                     switch (choice){
+                        case 1:
+                            documentsList = (ArrayList<DocumentDetails>) oi.readObject();
+                            SetDocuments setDocuments = new SetDocuments(dc);
+                            Thread thread = new Thread(setDocuments);
+                            thread.start();
+                            break;
                         case 10:
                             //Video call request
                             String senderUsername = oi.readUTF();
-                            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/AudioVideoCommunication.fxml"));
-                            Parent root = loader.load();
-                            AudioVideoCommunicationController audioVideoCommunicationController = loader.getController();
-                            audioVideoCommunicationController.setSocket(getSocket());
-                            audioVideoCommunicationController.setUseridInfo(useridInfo);
-//        audioVideoCommunicationController.setReceiverId(2);
-                            audioVideoCommunicationController.setReceiverUsername(senderUsername);
-
-                            Stage dashboardStage = new Stage();
-                            dashboardStage.initStyle(StageStyle.DECORATED);
-                            dashboardStage.setTitle("Audio Video Communication");
-                            dashboardStage.setMaximized(true);
-//            dashboardStage.setScene(new Scene(loader.load()));
-                            dashboardStage.setScene(new Scene(root, 1530, 780));
-                            dashboardStage.show();
-
-                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
-                            stage1.close();
+                            System.out.println(senderUsername);
+//                            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/AudioVideoCommunication.fxml"));
+//                            Parent root = loader.load();
+//                            AudioVideoCommunicationController audioVideoCommunicationController = loader.getController();
+//                            audioVideoCommunicationController.setSocket(getSocket());
+//                            audioVideoCommunicationController.setUseridInfo(useridInfo);
+////        audioVideoCommunicationController.setReceiverId(2);
+//                            audioVideoCommunicationController.setReceiverUsername(senderUsername);
+//
+//                            Stage dashboardStage = new Stage();
+//                            dashboardStage.initStyle(StageStyle.DECORATED);
+//                            dashboardStage.setTitle("Audio Video Communication");
+//                            dashboardStage.setMaximized(true);
+////            dashboardStage.setScene(new Scene(loader.load()));
+//                            dashboardStage.setScene(new Scene(root, 1530, 780));
+//                            dashboardStage.show();
+//
+//                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
+//                            stage1.close();
                             break;
                         default:
                             break;
                     }
-                } catch (IOException e) {
+                } catch (IOException | ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }

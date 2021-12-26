@@ -20,6 +20,9 @@ public class VideoCommIntermediateController {
     public void requestVideoCallClicked(ActionEvent actionEvent) throws IOException {
         String receiverName = receiverNameTF.getText().trim();
 
+        System.out.println(dashboardController.useridInfo.getUsername());
+        System.out.println(receiverName);
+
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(dashboardController.getSocket().getOutputStream());
         objectOutputStream.writeInt(20);
         objectOutputStream.writeUTF(dashboardController.useridInfo.getUsername());
