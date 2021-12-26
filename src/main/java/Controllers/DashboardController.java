@@ -4,6 +4,7 @@ import UtilClasses.DocumentDetails;
 import UtilClasses.SerializableImage;
 import UtilClasses.SetDocuments;
 import UtilClasses.UseridInfo;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -139,16 +140,19 @@ public class DashboardController implements Initializable {
 //        audioVideoCommunicationController.setReceiverId(2);
                         audioVideoCommunicationController.setReceiverUsername(senderUsername);
 
-                        Stage dashboardStage = new Stage();
-                        dashboardStage.initStyle(StageStyle.DECORATED);
-                        dashboardStage.setTitle("Audio Video Communication");
-                        dashboardStage.setMaximized(true);
+                        Platform.runLater(() -> {
+                            Stage dashboardStage = new Stage();
+                            dashboardStage.initStyle(StageStyle.DECORATED);
+                            dashboardStage.setTitle("Audio Video Communication");
+                            dashboardStage.setMaximized(true);
 //            dashboardStage.setScene(new Scene(loader.load()));
-                        dashboardStage.setScene(new Scene(root, 1530, 780));
-                        dashboardStage.show();
+                            dashboardStage.setScene(new Scene(root, 1530, 780));
+                            dashboardStage.show();
 
-                        Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
-                        stage1.close();
+                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
+                            stage1.close();
+                        });
+
                         break;
                     }
                     switch (choice){
