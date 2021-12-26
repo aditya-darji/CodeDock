@@ -43,13 +43,20 @@ public class DashboardController implements Initializable {
         this.socket = socket;
         dc = this;
 
-        DashboardControllerThread dashboardControllerThread = new DashboardControllerThread();
-        Thread thread1 = new Thread(dashboardControllerThread);
-        thread1.start();
+//        DashboardControllerThread dashboardControllerThread = new DashboardControllerThread();
+//        Thread thread1 = new Thread(dashboardControllerThread);
+//        thread1.start();
 
         ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
         objectOutputStream.writeInt(7);
         objectOutputStream.flush();
+
+        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+        int choice = (int) oi.readInt();
+        documentsList = (ArrayList<DocumentDetails>) oi.readObject();
+        SetDocuments setDocuments = new SetDocuments(dc);
+        Thread thread = new Thread(setDocuments);
+        thread.start();
     }
 
     public ArrayList<DocumentDetails> getDocumentsList() {
