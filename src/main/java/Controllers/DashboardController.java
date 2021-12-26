@@ -104,6 +104,9 @@ public class DashboardController implements Initializable {
     }
 
     public void startVideoCommunicationClicked(ActionEvent actionEvent) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeInt(21);
+        objectOutputStream.flush();
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/VideoCommIntermediate.fxml"));
         Parent root = loader.load();
         VideoCommIntermediateController videoCommIntermediateController = loader.getController();
