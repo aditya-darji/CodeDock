@@ -1,6 +1,6 @@
 package UtilClasses;
 
 public class ConnectionUtil {
-    public static String host="192.168.188.35";
-    public static int port=8001;
+    public static String host="193.161.193.99";
+    public static int port=25780;
 }

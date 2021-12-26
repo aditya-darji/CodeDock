@@ -40,7 +40,7 @@ public class AudioVideoCommunicationController implements Initializable {
         webcam = Webcam.getDefault();
         webcam.setViewSize(new Dimension(320, 240));
         webcam.open();
-        new Thread(new VideoFeedTaker()).start();
+//        new Thread(new VideoFeedTaker()).start();
     }
 
     class VideoFeedTaker implements Runnable {
@@ -85,6 +85,7 @@ public class AudioVideoCommunicationController implements Initializable {
                         case 1:
                             //To get image of client from server
                             SerializableImage serializableImage = (SerializableImage) oi.readObject();
+                            System.out.println("HELLO");
                             receiverImageView.setImage(serializableImage.getImage());
                             break;
                         case 2:
@@ -105,6 +106,7 @@ public class AudioVideoCommunicationController implements Initializable {
         AudioVideoCommunicationThread audioVideoCommunicationThread = new AudioVideoCommunicationThread();
         Thread thread = new Thread(audioVideoCommunicationThread);
         thread.start();
+        new Thread(new VideoFeedTaker()).start();
     }
 
     public void setUseridInfo(UseridInfo useridInfo) {

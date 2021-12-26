@@ -4,6 +4,7 @@ import UtilClasses.DocumentDetails;
 import UtilClasses.SerializableImage;
 import UtilClasses.SetDocuments;
 import UtilClasses.UseridInfo;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -129,6 +130,32 @@ public class DashboardController implements Initializable {
                     ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
                     int choice = (int) oi.readInt();
                     if(choice==1000) break;
+                    if(choice == 10){
+                        String senderUsername = oi.readUTF();
+                        System.out.println(senderUsername);
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/AudioVideoCommunication.fxml"));
+                        Parent root = loader.load();
+                        AudioVideoCommunicationController audioVideoCommunicationController = loader.getController();
+                        audioVideoCommunicationController.setSocket(getSocket());
+                        audioVideoCommunicationController.setUseridInfo(useridInfo);
+//        audioVideoCommunicationController.setReceiverId(2);
+                        audioVideoCommunicationController.setReceiverUsername(senderUsername);
+
+                        Platform.runLater(() -> {
+                            Stage dashboardStage = new Stage();
+                            dashboardStage.initStyle(StageStyle.DECORATED);
+                            dashboardStage.setTitle("Audio Video Communication");
+                            dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+                            dashboardStage.setScene(new Scene(root, 1530, 780));
+                            dashboardStage.show();
+
+                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
+                            stage1.close();
+                        });
+
+                        break;
+                    }
 
                     switch (choice){
                         case 1:
@@ -136,29 +163,6 @@ public class DashboardController implements Initializable {
                             SetDocuments setDocuments = new SetDocuments(dc);
                             Thread thread = new Thread(setDocuments);
                             thread.start();
-                            break;
-                        case 10:
-                            //Video call request
-                            String senderUsername = oi.readUTF();
-                            System.out.println(senderUsername);
-//                            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/AudioVideoCommunication.fxml"));
-//                            Parent root = loader.load();
-//                            AudioVideoCommunicationController audioVideoCommunicationController = loader.getController();
-//                            audioVideoCommunicationController.setSocket(getSocket());
-//                            audioVideoCommunicationController.setUseridInfo(useridInfo);
-////        audioVideoCommunicationController.setReceiverId(2);
-//                            audioVideoCommunicationController.setReceiverUsername(senderUsername);
-//
-//                            Stage dashboardStage = new Stage();
-//                            dashboardStage.initStyle(StageStyle.DECORATED);
-//                            dashboardStage.setTitle("Audio Video Communication");
-//                            dashboardStage.setMaximized(true);
-////            dashboardStage.setScene(new Scene(loader.load()));
-//                            dashboardStage.setScene(new Scene(root, 1530, 780));
-//                            dashboardStage.show();
-//
-//                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
-//                            stage1.close();
                             break;
                         default:
                             break;
