@@ -1,6 +1,7 @@
 package Controllers;
 
 import UtilClasses.DocumentDetails;
+import UtilClasses.SerializableImage;
 import UtilClasses.SetDocuments;
 import UtilClasses.UseridInfo;
 import javafx.event.ActionEvent;
@@ -100,5 +101,62 @@ public class DashboardController implements Initializable {
 //            dashboardStage.setScene(new Scene(loader.load()));
         dashboardStage.setScene(new Scene(root, 900, 700));
         dashboardStage.showAndWait();
+    }
+
+    public void startVideoCommunicationClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/VideoCommIntermediate.fxml"));
+        Parent root = loader.load();
+        VideoCommIntermediateController videoCommIntermediateController = loader.getController();
+        videoCommIntermediateController.setDashboardController(this);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initModality(Modality.APPLICATION_MODAL);
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setTitle("Video Communication Intermediate");
+        dashboardStage.setScene(new Scene(root, 600, 400));
+        dashboardStage.showAndWait();
+    }
+
+    class DashboardControllerThread implements Runnable {
+
+        @Override
+        public void run() {
+            while(true){
+                try{
+                    ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                    int choice = (int) oi.readInt();
+                    if(choice==1000) break;
+
+                    switch (choice){
+                        case 10:
+                            //Video call request
+                            String senderUsername = oi.readUTF();
+                            FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/AudioVideoCommunication.fxml"));
+                            Parent root = loader.load();
+                            AudioVideoCommunicationController audioVideoCommunicationController = loader.getController();
+                            audioVideoCommunicationController.setSocket(getSocket());
+                            audioVideoCommunicationController.setUseridInfo(useridInfo);
+//        audioVideoCommunicationController.setReceiverId(2);
+                            audioVideoCommunicationController.setReceiverUsername(senderUsername);
+
+                            Stage dashboardStage = new Stage();
+                            dashboardStage.initStyle(StageStyle.DECORATED);
+                            dashboardStage.setTitle("Audio Video Communication");
+                            dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+                            dashboardStage.setScene(new Scene(root, 1530, 780));
+                            dashboardStage.show();
+
+                            Stage stage1 = (Stage) welcomeLabel.getScene().getWindow();
+                            stage1.close();
+                            break;
+                        default:
+                            break;
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

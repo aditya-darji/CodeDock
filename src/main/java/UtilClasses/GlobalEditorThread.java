@@ -91,6 +91,9 @@ public class GlobalEditorThread implements Runnable{
                         String outputData = oi.readUTF();
                         globalEditorController.outputTextArea.setText(outputData);
                         break;
+                    case 10:
+                        //video audio communication requested
+                        break;
                     default:
                         break;
                 }

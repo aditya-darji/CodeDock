@@ -49,6 +49,11 @@
                         <Font size="24.0" />
                      </font>
                   </Button>
+                  <Button layoutX="10.0" layoutY="132.0" mnemonicParsing="false" onAction="#startVideoCommunicationClicked" prefHeight="96.0" prefWidth="383.0" text="Start Video Communication">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Button>
                </children>
             </Pane>
          </children>
