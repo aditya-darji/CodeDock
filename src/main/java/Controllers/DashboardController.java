@@ -145,24 +145,24 @@ public class DashboardController implements Initializable {
         objectOutputStream.writeInt(23);
         objectOutputStream.flush();
 
-//        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-//        int choice = (int) oi.readInt();
-//        String acknowledgement = oi.readUTF();
-//        System.out.println(acknowledgement);
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
-//        Parent root = loader.load();
-//        LoginController ec = loader.getController();
-//        ec.setSocket(this.socket);
-//
-//        Stage dashboardStage = new Stage();
-//        dashboardStage.initStyle(StageStyle.DECORATED);
-//        dashboardStage.setScene(new Scene(root, 600, 400));
-//        dashboardStage.setTitle("Login");
-//        /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
-//        dashboardStage.show();
-//
-//        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-//        stage.close();
+        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+        int choice = (int) oi.readInt();
+        String acknowledgement = oi.readUTF();
+        System.out.println(acknowledgement);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
+        Parent root = loader.load();
+        LoginController ec = loader.getController();
+        ec.setSocket(this.socket);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setScene(new Scene(root, 600, 400));
+        dashboardStage.setTitle("Login");
+        /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
+        dashboardStage.show();
+
+        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+        stage.close();
     }
 
     class DashboardControllerThread implements Runnable {
