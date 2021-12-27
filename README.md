@@ -68,13 +68,6 @@ The project is wholly based on JAVA with a MYSQL database.
 
 To use the application, one will first have to set up the 'CodeDock Database'. After that, he would have to clone 'CodeDockServer' repo (Link provided in Project link section) and setup JDK 8 in project structure. Then he would have to add mysql-connector-java jar file to module section in Server project. After that, one will have to clone CodeDock repo (Link provided in Project link section) and setup JDK 8 in project structure. Then, he would have to add jar files of webcam-capture-0.3.12-dist in module in modules of project structure. Now to run CodeDock you have to run Server.java file in CodeDockServer Project, then you will have to run Main.java file in CodeDock project.
 
-<!-- ROADMAP -->
-
-## Roadmap
-
-The roadmap guides the users on how to use various features of the Musafir Application. If a User is new to the app, he will first have to signup and submit various information asked in the Signup Form. Else he will have to log in to his account. After logging in, the Dashboard page will open. The dashboard page consists of various buttons labelled accordingly. The Passenger can click any of them to perform respective task.<!-- Below are various tasks that a passenger can perform:-->
-
-
 <!-- CONTACT -->
 
 ## Contact
