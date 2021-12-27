@@ -11,5 +11,6 @@
    <children>
       <ImageView fx:id="senderImageView" fitHeight="609.0" fitWidth="615.0" layoutX="65.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" />
       <ImageView fx:id="receiverImageView" fitHeight="609.0" fitWidth="615.0" layoutX="808.0" layoutY="72.0" pickOnBounds="true" preserveRatio="true" />
+      <Button layoutX="765.0" layoutY="712.0" mnemonicParsing="false" onAction="#endCallButtonClicked" text="END CALL" />
    </children>
 </AnchorPane>

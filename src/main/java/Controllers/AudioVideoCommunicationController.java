@@ -7,6 +7,7 @@ import com.github.sarxos.webcam.Webcam;
 import com.github.sarxos.webcam.WebcamResolution;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -48,6 +49,10 @@ public class AudioVideoCommunicationController implements Initializable {
 //        new Thread(new AudioFeedTaker()).start();
     }
 
+    public void endCallButtonClicked(ActionEvent actionEvent) {
+
+    }
+
     class VideoFeedTaker implements Runnable {
 
         @Override
@@ -68,7 +73,7 @@ public class AudioVideoCommunicationController implements Initializable {
                     e.printStackTrace();
                 }
                 try {
-                    Thread.sleep(1000);
+                    Thread.sleep(80);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

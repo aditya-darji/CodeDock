@@ -78,6 +78,14 @@ public class DashboardController implements Initializable {
     }
 
     public void openLocalEditorButtonClicked(ActionEvent actionEvent) throws IOException {
+//        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+//        objectOutputStream.writeInt(21);
+//        objectOutputStream.flush();
+//
+//        ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
+//        int choice = objectInputStream.readInt();
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/LocalEditor.fxml"));
         Parent root = loader.load();
         LocalEditorController ec = loader.getController();
@@ -113,9 +121,12 @@ public class DashboardController implements Initializable {
     }
 
     public void startVideoCommunicationClicked(ActionEvent actionEvent) throws IOException {
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-        objectOutputStream.writeInt(21);
-        objectOutputStream.flush();
+//        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+//        objectOutputStream.writeInt(21);
+//        objectOutputStream.flush();
+
+
+
         FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/VideoCommIntermediate.fxml"));
         Parent root = loader.load();
         VideoCommIntermediateController videoCommIntermediateController = loader.getController();
@@ -130,20 +141,28 @@ public class DashboardController implements Initializable {
     }
 
     public void logoutButtonClicked(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
-        Parent root = loader.load();
-        LoginController ec = loader.getController();
-        ec.setSocket(this.socket);
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeInt(23);
+        objectOutputStream.flush();
 
-        Stage dashboardStage = new Stage();
-        dashboardStage.initStyle(StageStyle.DECORATED);
-        dashboardStage.setScene(new Scene(root, 600, 400));
-        dashboardStage.setTitle("Login");
-        /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
-        dashboardStage.show();
-
-        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
-        stage.close();
+//        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+//        int choice = (int) oi.readInt();
+//        String acknowledgement = oi.readUTF();
+//        System.out.println(acknowledgement);
+//        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
+//        Parent root = loader.load();
+//        LoginController ec = loader.getController();
+//        ec.setSocket(this.socket);
+//
+//        Stage dashboardStage = new Stage();
+//        dashboardStage.initStyle(StageStyle.DECORATED);
+//        dashboardStage.setScene(new Scene(root, 600, 400));
+//        dashboardStage.setTitle("Login");
+//        /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
+//        dashboardStage.show();
+//
+//        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+//        stage.close();
     }
 
     class DashboardControllerThread implements Runnable {
@@ -180,6 +199,27 @@ public class DashboardController implements Initializable {
 
                         break;
                     }
+                    else if(choice == 2){
+                        String acknowledgement = oi.readUTF();
+                        System.out.println(acknowledgement);
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
+                        Parent root = loader.load();
+                        LoginController ec = loader.getController();
+                        ec.setSocket(socket);
+
+                        Platform.runLater(() -> {
+                            Stage dashboardStage = new Stage();
+                            dashboardStage.initStyle(StageStyle.DECORATED);
+                            dashboardStage.setScene(new Scene(root, 600, 400));
+                            dashboardStage.setTitle("Login");
+                            /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
+                            dashboardStage.show();
+
+                            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+                            stage.close();
+                        });
+                        break;
+                    }
                     switch (choice){
                         case 1:
                             documentsList = (ArrayList<DocumentDetails>) oi.readObject();
@@ -187,7 +227,6 @@ public class DashboardController implements Initializable {
                             Thread thread = new Thread(setDocuments);
                             thread.start();
                             break;
-
                         default:
                             break;
                     }
