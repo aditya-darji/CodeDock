@@ -54,6 +54,7 @@ public class GlobalEditorController implements Initializable {
     public TextArea caretTextArea;
     private int keyPressCount = 0;
     public Trie prefixTree;
+    private int indentation = 0;
 
     private static final String[] CPP_KEYWORDS = new String[] {
             "Auto", "double", "int", "struct", "Break",
@@ -381,14 +382,27 @@ public class GlobalEditorController implements Initializable {
     public void onKeyRelease(KeyEvent keyEvent) {
         int caretPosition = documentContentTextArea.getCaretPosition();
 
-        String s1 = documentContentTextArea.getText().substring(0, caretPosition);
-        int lastIndex = Math.max(Math.max(s1.lastIndexOf(' '), s1.lastIndexOf('\n')), s1.lastIndexOf('#'));
-        String userWord = s1.substring(lastIndex+1, caretPosition);
-        TrieNode tn = prefixTree.searchNode(userWord);
-        if(tn != null) {
-            ArrayList<String> trieResult = prefixTree.wordsFinderTraversal(tn,0);
-            recommendationCB.setItems(FXCollections.observableArrayList(trieResult));
-            recommendationCB.getSelectionModel().selectFirst();
+        char lastChar = documentContentTextArea.getText().charAt(caretPosition-1);
+        String wholeText = documentContentTextArea.getText();
+        String beforeText = wholeText.substring(0, caretPosition);
+        String afterText = wholeText.substring(caretPosition);
+
+        if(lastChar == '['){
+            documentContentTextArea.setText(beforeText + ']' + afterText);
+        }else if(lastChar == '{'){
+            documentContentTextArea.setText(beforeText + '}' + afterText);
+        }else if(lastChar == '('){
+            documentContentTextArea.setText(beforeText + ')' + afterText);
+        }else{
+            String s1 = documentContentTextArea.getText().substring(0, caretPosition);
+            int lastIndex = Math.max(Math.max(s1.lastIndexOf(' '), s1.lastIndexOf('\n')), s1.lastIndexOf('#'));
+            String userWord = s1.substring(lastIndex+1, caretPosition);
+            TrieNode tn = prefixTree.searchNode(userWord);
+            if(tn != null) {
+                ArrayList<String> trieResult = prefixTree.wordsFinderTraversal(tn,0);
+                recommendationCB.setItems(FXCollections.observableArrayList(trieResult));
+                recommendationCB.getSelectionModel().selectFirst();
+            }
         }
     }
 }
