@@ -54,7 +54,7 @@ public class GlobalEditorController implements Initializable {
     public TextArea caretTextArea;
     private int keyPressCount = 0;
     public Trie prefixTree;
-    private int indentation = 0;
+    private int indentation = 0, recommendationPosition=-1;
 
     private static final String[] CPP_KEYWORDS = new String[] {
             "Auto", "double", "int", "struct", "Break",
@@ -381,11 +381,11 @@ public class GlobalEditorController implements Initializable {
 
     public void onKeyRelease(KeyEvent keyEvent) {
         int caretPosition = documentContentTextArea.getCaretPosition();
-
         char lastChar = documentContentTextArea.getText().charAt(caretPosition-1);
         String wholeText = documentContentTextArea.getText();
         String beforeText = wholeText.substring(0, caretPosition);
         String afterText = wholeText.substring(caretPosition);
+        recommendationPosition = caretPosition;
 
         if(lastChar == '['){
             documentContentTextArea.setText(beforeText + ']' + afterText);
@@ -404,5 +404,16 @@ public class GlobalEditorController implements Initializable {
                 recommendationCB.getSelectionModel().selectFirst();
             }
         }
+    }
+
+    public void addRecommendation(ActionEvent actionEvent) {
+        String selectedItem = (String) recommendationCB.getSelectionModel().getSelectedItem();
+
+        String wholeText = documentContentTextArea.getText();
+        String beforeText = wholeText.substring(0, recommendationPosition);
+        String afterText = wholeText.substring(recommendationPosition);
+        int lastIndex = Math.max(Math.max(beforeText.lastIndexOf(' '), beforeText.lastIndexOf('\n')), beforeText.lastIndexOf('#'));
+        String beforeWordText = beforeText.substring(0, lastIndex+1);
+        documentContentTextArea.setText(beforeWordText + selectedItem + afterText);
     }
 }

@@ -8,10 +8,14 @@ import com.github.sarxos.webcam.WebcamResolution;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 //import com.xuggle.mediatool.IMediaWriter;
 //import com.xuggle.mediatool.ToolFactory;
 //import com.xuggle.xuggler.ICodec;
@@ -40,24 +44,51 @@ public class AudioVideoCommunicationController implements Initializable {
     double duration, seconds;
     AudioInputStream audioInputStream,audioInputStreamincoming;
     final int bufSize = 16384;
+    Thread videoFeedThread;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         webcam = Webcam.getDefault();
         webcam.setViewSize(new Dimension(320, 240));
         webcam.open();
-        new Thread(new VideoFeedTaker()).start();
+        videoFeedThread = new Thread(new VideoFeedTaker());
+        videoFeedThread.start();
 //        new Thread(new AudioFeedTaker()).start();
     }
 
-    public void endCallButtonClicked(ActionEvent actionEvent) {
+    public void endCallButtonClicked(ActionEvent actionEvent) throws IOException, ClassNotFoundException {
+        videoFeedThread.stop();
+        webcam.close();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
+        objectOutputStream.writeInt(24);
+        objectOutputStream.flush();
 
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Dashboard.fxml"));
+        Parent root = loader.load();
+        DashboardController dc = loader.getController();
+        dc.setSocket(this.socket);
+        dc.setUseridInfo(useridInfo);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setTitle("Dashboard");
+        dashboardStage.setMaximized(true);
+//            dashboardStage.setScene(new Scene(loader.load()));
+        dashboardStage.setScene(new Scene(root, 1530, 780));
+        dashboardStage.show();
+
+        Stage stage = (Stage) receiverImageView.getScene().getWindow();
+        stage.close();
     }
 
     class VideoFeedTaker implements Runnable {
+        boolean repeat = true;
+        public void stop() {
+            repeat = false;
+        }
 
         @Override
         public void run() {
-            while (true){
+            while (repeat){
                 BufferedImage buffImage = webcam.getImage();
                 Image img = SwingFXUtils.toFXImage(buffImage, null);
                 senderImageView.setImage(img);
@@ -364,7 +395,6 @@ public class AudioVideoCommunicationController implements Initializable {
                             Playback playback=new Playback();
                             Thread thread=new Thread(playback);
                             thread.start();
-
                             break;
                         case 3:
                             String acknowledgementFromServer = oi.readUTF();
