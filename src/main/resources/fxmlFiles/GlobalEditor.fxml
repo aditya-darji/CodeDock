@@ -20,7 +20,7 @@
                         <MenuItem mnemonicParsing="false" text="Open Directory" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" onAction="#saveClicked"/>
+                        <MenuItem mnemonicParsing="false" onAction="#saveClicked" text="Save" />
                         <MenuItem mnemonicParsing="false" text="Save As…" />
                         <SeparatorMenuItem mnemonicParsing="false" />
                         <MenuItem fx:id="manageAccessMenuItem" mnemonicParsing="false" onAction="#manageAccessClicked" text="Manage Access" />
@@ -72,6 +72,8 @@
                         </Button>
                         <TextField fx:id="roomMessageTF" layoutX="87.0" layoutY="222.0" prefHeight="31.0" prefWidth="296.0" />
                         <Label layoutX="12.0" layoutY="227.0" text="Message:" />
+                        <ComboBox fx:id="recommendationCB" layoutX="16.0" layoutY="691.0" prefHeight="31.0" prefWidth="362.0" />
+                        <Label layoutX="14.0" layoutY="663.0" text="Recommmendations:" />
                             </children>
                         </AnchorPane>
                     </children>
@@ -79,7 +81,7 @@
                 <AnchorPane prefHeight="950.0" prefWidth="750.0">
                <children>
                   <TextArea fx:id="lines" prefHeight="950.0" prefWidth="38.0" />
-                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onKeyPress" prefHeight="950.0" prefWidth="1000.0" />
+                  <TextArea fx:id="documentContentTextArea" layoutX="37.0" onKeyPressed="#onKeyPress" onKeyReleased="#onKeyRelease" prefHeight="950.0" prefWidth="1000.0" />
                </children></AnchorPane>
             <ScrollPane prefViewportHeight="956.0" prefViewportWidth="365.0">
                <content>

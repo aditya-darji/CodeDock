@@ -1,23 +1,19 @@
 package Controllers;
 
 import UtilClasses.*;
-import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
@@ -26,11 +22,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-import javax.swing.text.Document;
-import javax.swing.text.Element;
-import java.awt.*;
 import java.io.*;
 import java.net.Socket;
 import java.net.URL;
@@ -52,6 +43,7 @@ public class GlobalEditorController implements Initializable {
     public MenuItem manageAccessMenuItem;
     public WebView webView;
     public AnchorPane rightAnchorPane;
+    public ComboBox<Object> recommendationCB;
     private Socket socket;
     private UseridInfo useridInfo;
     public DocumentDetails documentDetails;
@@ -61,6 +53,50 @@ public class GlobalEditorController implements Initializable {
     public HashMap<Integer, Integer> usersCaretPosition = new HashMap<Integer, Integer>();
     public TextArea caretTextArea;
     private int keyPressCount = 0;
+    public Trie prefixTree;
+
+    private static final String[] CPP_KEYWORDS = new String[] {
+            "Auto", "double", "int", "struct", "Break",
+            "else", "long", "switch", "Case", "enum", "register",
+            "typedef", "Char", "extern", "return", "union", "Const",
+            "float", "short", "unsigned", "Continue", "for", "signed",
+            "void", "Default", "goto", "sizeof", "volatile", "Do", "if",
+            "static", "while", "Asm", "dynamic_cast", "namespace",
+            "reinterpret_cast", "Bool", "explicit", "new", "static_cast",
+            "Catch", "false", "operator", "template", "Class", "friend",
+            "private", "this", "Const_cast", "inline", "public", "throw",
+            "Delete", "mutable", "protected", "true", "Try", "typeid",
+            "typename", "using", "virtual", "wchar_t"
+    };
+
+    private static final String[] JAVA_KEYWORDS = new String[] {
+            "abstract", "assert", "boolean", "break", "byte",
+            "case", "catch", "char", "class", "const",
+            "continue", "default", "do", "double", "else",
+            "enum", "extends", "final", "finally", "float",
+            "for", "goto", "if", "implements", "import",
+            "instanceof", "int", "interface", "long", "native",
+            "new", "package", "private", "protected", "public",
+            "return", "short", "static", "strictfp", "super",
+            "switch", "synchronized", "this", "throw", "throws",
+            "transient", "try", "void", "volatile", "while"
+    };
+
+    private static final String[] C_KEYWORDS = new String[] {
+            "auto","double","int","struct","break","else","long",
+            "switch","case","enum","register","typedef","char",
+            "extern","return","union","const","float","short",
+            "unsigned","continue","for","signed","void","default",
+            "goto","sizeof","volatile","do","if","static","while"
+    };
+
+    private static final String[] PYTHON_KEYWORDS = new String[] {
+            "False", "None", "True", "and", "as", "assert", "break", "class",
+            "continue", "def", "del", "elif", "else", "except", "finally",
+            "for", "from", "global", "if", "import", "in", "is", "lambda",
+            "nonlocal", "not", "or", "pass", "raise", "return",
+            "try", "while", "with", "yield"
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -159,6 +195,8 @@ public class GlobalEditorController implements Initializable {
     public void setSocket(Socket socket) throws IOException {
         this.socket = socket;
 
+
+
         GlobalEditorThread globalEditorThread = new GlobalEditorThread(socket, this);
         Thread thread = new Thread(globalEditorThread);
         thread.start();
@@ -215,35 +253,32 @@ public class GlobalEditorController implements Initializable {
         documentContentTextArea.scrollTopProperty().bindBidirectional(lines.scrollTopProperty());
         lines.scrollTopProperty().bindBidirectional(documentContentTextArea.scrollTopProperty());
 
-//        documentContentTextArea.textProperty().addListener(new DocumentListener() {
-//            public String getText(DocumentEvent e) {
-//                Document doc = (Document)e.getDocument();
-//                int caretPosition = doc.getLength();
-////        int changeLength = e.getLength();
-//                Element root = doc.getDefaultRootElement();
-//                StringBuilder text = new StringBuilder("1" + System.getProperty("line.separator"));
-//                for(int i = 2; i < root.getElementIndex(caretPosition) + 2; i++) {
-//                    text.append(i).append(System.getProperty("line.separator"));
-//                }
-//                return text.toString();
-//            }
-//
-//            @Override
-//            public void insertUpdate(DocumentEvent e) {
-//                lines.setText(getText(e));
-//            }
-//
-//            @Override
-//            public void removeUpdate(DocumentEvent e) {
-//                lines.setText(getText(e));
-//            }
-//
-//            @Override
-//            public void changedUpdate(DocumentEvent e) {
-//                lines.setText(getText(e));
-//            }
-//        });
-
+        prefixTree = new Trie();
+        String documentExtension = documentDetails.getDocumentExtension();
+        switch (documentExtension){
+            case "cpp":
+                for (String cppKeyword : CPP_KEYWORDS) {
+                    prefixTree.insert(cppKeyword);
+                }
+                break;
+            case "java":
+                for (String javaKeyword : JAVA_KEYWORDS) {
+                    prefixTree.insert(javaKeyword);
+                }
+                break;
+            case "c":
+                for (String cKeyword : C_KEYWORDS) {
+                    prefixTree.insert(cKeyword);
+                }
+                break;
+            case "python":
+                for (String pythonKeyword : PYTHON_KEYWORDS) {
+                    prefixTree.insert(pythonKeyword);
+                }
+                break;
+            default:
+                break;
+        }
 
         if(this.documentDetails.getAccess() == 1){
             documentContentTextArea.setEditable(false);
@@ -286,6 +321,7 @@ public class GlobalEditorController implements Initializable {
     public void onKeyPress(KeyEvent keyEvent) throws IOException {
         keyPressCount++;
         int caretPosition = documentContentTextArea.getCaretPosition();
+
         usersCaretPosition.put(useridInfo.getUserid(), caretPosition);
 
         documentDetails.setDocumentContent(documentContentTextArea.getText());
@@ -340,5 +376,19 @@ public class GlobalEditorController implements Initializable {
         objectOutputStream.writeInt(documentDetails.getRoomId());
         objectOutputStream.writeUTF(documentDetails.getDocumentContent());
         objectOutputStream.flush();
+    }
+
+    public void onKeyRelease(KeyEvent keyEvent) {
+        int caretPosition = documentContentTextArea.getCaretPosition();
+
+        String s1 = documentContentTextArea.getText().substring(0, caretPosition);
+        int lastIndex = Math.max(Math.max(s1.lastIndexOf(' '), s1.lastIndexOf('\n')), s1.lastIndexOf('#'));
+        String userWord = s1.substring(lastIndex+1, caretPosition);
+        TrieNode tn = prefixTree.searchNode(userWord);
+        if(tn != null) {
+            ArrayList<String> trieResult = prefixTree.wordsFinderTraversal(tn,0);
+            recommendationCB.setItems(FXCollections.observableArrayList(trieResult));
+            recommendationCB.getSelectionModel().selectFirst();
+        }
     }
 }
