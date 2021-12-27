@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -126,6 +127,23 @@ public class DashboardController implements Initializable {
         dashboardStage.setTitle("Video Communication Intermediate");
         dashboardStage.setScene(new Scene(root, 600, 400));
         dashboardStage.showAndWait();
+    }
+
+    public void logoutButtonClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("../fxmlFiles/Login.fxml"));
+        Parent root = loader.load();
+        LoginController ec = loader.getController();
+        ec.setSocket(this.socket);
+
+        Stage dashboardStage = new Stage();
+        dashboardStage.initStyle(StageStyle.DECORATED);
+        dashboardStage.setScene(new Scene(root, 600, 400));
+        dashboardStage.setTitle("Login");
+        /* primaryStage.getIcons().add(new Image("/images/img.png"));*/
+        dashboardStage.show();
+
+        Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+        stage.close();
     }
 
     class DashboardControllerThread implements Runnable {
